@@ -3,12 +3,12 @@ import { StyleSheet, View } from 'react-native';
 
 import { ScreenContent } from '~/components/ScreenContent';
 
-export default function Home() {
+export default function BookMarks() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Tab Two' }} />
+      <Stack.Screen options={{ title: 'BookMarks' }} />
       <View style={styles.container}>
-        <ScreenContent path="app/(tabs)/two.tsx" title="Tab Two" />
+        <ScreenContent path="app/(tabs)/bookmarks.tsx" title="BookMarks" />
       </View>
     </>
   );

@@ -3,12 +3,12 @@ import { StyleSheet, View } from 'react-native';
 
 import { ScreenContent } from '~/components/ScreenContent';
 
-export default function Home() {
+export default function Profile() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Home' }} />
+      <Stack.Screen options={{ title: 'My Profile' }} />
       <View style={styles.container}>
-        <ScreenContent path="app/(tabs)/index.tsx" title="Home" />
+        <ScreenContent path="app/(tabs)/profile.tsx" title="My Profile" />
       </View>
     </>
   );
