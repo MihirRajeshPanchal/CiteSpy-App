@@ -6,7 +6,7 @@ import { ScreenContent } from '~/components/ScreenContent';
 export default function BookMarks() {
   return (
     <>
-      <Stack.Screen options={{ title: 'BookMarks' }} />
+      <Stack.Screen options={{ title: 'Book Marks' }} />
       <View style={styles.container}>
         <ScreenContent path="app/(tabs)/bookmarks.tsx" title="BookMarks" />
       </View>
