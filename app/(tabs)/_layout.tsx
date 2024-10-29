@@ -2,8 +2,21 @@ import { Link, Tabs } from 'expo-router';
 import { FontAwesome5, Foundation, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import { HeaderButton } from '../../components/HeaderButton';
 import { TabBarIcon } from '../../components/TabBarIcon';
+import React, { useState } from "react";
+import { getAuth } from "firebase/auth";
+import { router } from "expo-router";
 
 export default function TabLayout() {
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  getAuth().onAuthStateChanged((user) => {
+    setIsLoading(false);
+    if (!user) {
+      router.replace("/landing");
+    }
+  });
+
   return (
     <Tabs
       screenOptions={{
