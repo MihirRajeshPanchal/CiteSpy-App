@@ -26,10 +26,6 @@ export default function LoginScreen() {
         keyboardType="email-address"
         onChangeText={(text) => setEmail(text)}
         placeholderTextColor="#9ca3af"
-        style={{
-          fontFamily: 'Arial',
-          fontSize: 16,
-        }}
       />
       <TextInput
         className="bg-white rounded-lg shadow-sm p-4 mb-6 w-4/5"
@@ -37,10 +33,6 @@ export default function LoginScreen() {
         secureTextEntry
         onChangeText={(text) => setPassword(text)}
         placeholderTextColor="#9ca3af"
-        style={{
-          fontFamily: 'Arial',
-          fontSize: 16,
-        }}
       />
       <TouchableOpacity
         onPress={handleLogin}
