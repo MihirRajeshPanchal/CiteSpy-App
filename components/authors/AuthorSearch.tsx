@@ -1,28 +1,28 @@
 import React from 'react';
 import { View, FlatList, ActivityIndicator, Text, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { SearchBar } from '../utils/SearchBar';
-import { PaperTile } from './PaperTile';
-import { Paper, SearchResponse } from '~/types/paper';
+import { AuthorTile } from './AuthorTile';
+import { Author, AuthorSearchResponse } from '~/types/author';
 
 const S2_API_KEY = process.env.EXPO_PUBLIC_S2_API_KEY;
 const INITIAL_LIMIT = 10;
 const LOAD_MORE_LIMIT = 20;
 
-export const PaperSearch = () => {
+export const AuthorSearch = () => {
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [papers, setPapers] = React.useState<Paper[]>([]);
+  const [authors, setAuthors] = React.useState<Author[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const [error, setError] = React.useState('');
   const [currentQuery, setCurrentQuery] = React.useState('');
   const [offset, setOffset] = React.useState(0);
   const [hasMore, setHasMore] = React.useState(true);
- 
-  const searchPapers = async (query: string, reset: boolean = true) => {
+
+  const searchAuthors = async (query: string, reset: boolean = true) => {
     if (reset) {
       setIsLoading(true);
       setOffset(0);
-      setPapers([]);
+      setAuthors([]);
       setHasMore(true);
     } else {
       setIsLoadingMore(true);
@@ -33,39 +33,39 @@ export const PaperSearch = () => {
     try {
       const currentOffset = reset ? 0 : offset;
       const response = await fetch(
-        'https://api.semanticscholar.org/graph/v1/paper/search?' +
+        'https://api.semanticscholar.org/graph/v1/author/search?' +
         new URLSearchParams({
           query,
           limit: (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT).toString(),
           offset: currentOffset.toString(),
-          fields: 'paperId,title,url,venue,year,authors,abstract,citationCount,publicationTypes,citationStyles,externalIds'
+          fields: 'authorId,externalIds,name,url,affiliations,paperCount,citationCount,hIndex,papers.paperId,papers.title,papers.url,papers.venue,papers.year,papers.authors,papers.abstract,papers.citationCount,papers.publicationTypes,papers.citationStyles,papers.externalIds'
         }), {
           headers: { 'X-API-KEY': S2_API_KEY || '' }
         }
       );
 
       if (!response.ok) {
-        throw new Error('Failed to fetch papers');
+        throw new Error('Failed to fetch authors');
       }
 
-      const searchResponse: SearchResponse = await response.json();
+      const searchResponse: AuthorSearchResponse = await response.json();
 
-      const newPapers = searchResponse.data.map((paper, index) => ({
-        ...paper,
-        uniqueId: `${paper.paperId}-${currentOffset + index}`
+      const newAuthors = searchResponse.data.map((author, index) => ({
+        ...author,
+        uniqueId: `${author.authorId}-${currentOffset + index}`
       }));
       
       if (reset) {
-        setPapers(newPapers);
+        setAuthors(newAuthors);
       } else {
-        setPapers(prevPapers => [...prevPapers, ...newPapers]);
+        setAuthors(prevAuthors => [...prevAuthors, ...newAuthors]);
       }
       
       setOffset(currentOffset + searchResponse.data.length);
       setHasMore(searchResponse.data.length === (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT));
       setCurrentQuery(query);
     } catch (err) {
-      setError('Failed to load papers. Please try again.');
+      setError('Failed to load authors. Please try again.');
       console.error(err);
     } finally {
       if (reset) {
@@ -78,7 +78,7 @@ export const PaperSearch = () => {
 
   const handleLoadMore = () => {
     if (!isLoadingMore && !isLoading && hasMore && currentQuery) {
-      searchPapers(currentQuery, false);
+      searchAuthors(currentQuery, false);
     }
   };
 
@@ -97,7 +97,7 @@ export const PaperSearch = () => {
     return (
       <View className="flex-1 justify-center items-center p-4">
         <Text className="text-gray-500 text-center">
-          Search for papers to see results
+          Search for authors to see results
         </Text>
       </View>
     );
@@ -111,16 +111,16 @@ export const PaperSearch = () => {
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View className="flex-1">
         <SearchBar
-          onSubmit={(query) => searchPapers(query, true)}
+          onSubmit={(query) => searchAuthors(query, true)}
           isExpanded={isExpanded}
           onFocus={() => setIsExpanded(true)}
           onClear={() => {
-            setPapers([]);
+            setAuthors([]);
             setOffset(0);
             setHasMore(true);
             setCurrentQuery('');
           }}
-          placeholder='Search Papers'
+          placeholder='Search authors'
         />
         
         {isLoading ? (
@@ -132,9 +132,9 @@ export const PaperSearch = () => {
             <Text className="text-red-500 text-center">{error}</Text>
           </View>
         ) : (
-          <FlatList<Paper & { uniqueId: string }>
-            data={papers}
-            renderItem={({ item }) => <PaperTile paper={item} />}
+          <FlatList<Author & { uniqueId: string }>
+            data={authors}
+            renderItem={({ item }) => <AuthorTile author={item} />}
             keyExtractor={(item) => item.uniqueId}
             contentContainerClassName="p-4"
             ListEmptyComponent={<EmptyListComponent />}

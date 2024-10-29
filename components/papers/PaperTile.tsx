@@ -68,7 +68,7 @@ export const PaperTile = ({ paper }: PaperTileProps) => {
             {paper.abstract}
           </Text>
         )}
-        
+         
         <View className="flex-row items-center justify-between">
           <Text className="text-sm text-gray-500">
             Citations: {paper.citationCount}

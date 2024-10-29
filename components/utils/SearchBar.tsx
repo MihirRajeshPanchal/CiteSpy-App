@@ -7,9 +7,10 @@ interface SearchBarProps {
   isExpanded: boolean;
   onFocus: () => void;
   onClear: () => void;
+  placeholder?: string;
 }
 
-export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear }: SearchBarProps) => {
+export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear , placeholder}: SearchBarProps) => {
   const [query, setQuery] = React.useState('');
   const animatedValue = React.useRef(new Animated.Value(0)).current;
   const inputRef = React.useRef<TextInput>(null);
@@ -24,7 +25,7 @@ export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear }: SearchBarP
 
   const translateY = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 0], // Remove the translation to keep the search bar in place
+    outputRange: [0, 0],
   });
 
   const handleSubmit = () => {
@@ -37,7 +38,7 @@ export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear }: SearchBarP
   const handleClear = () => {
     setQuery('');
     onClear();
-    inputRef.current?.focus(); // Keep focus after clearing
+    inputRef.current?.focus();
   };
 
   return (
@@ -61,7 +62,7 @@ export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear }: SearchBarP
           <TextInput
             ref={inputRef}
             className="flex-1 text-base"
-            placeholder="Search for papers..."
+            placeholder={placeholder}
             value={query}
             onChangeText={setQuery}
             onFocus={onFocus}
@@ -71,8 +72,8 @@ export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear }: SearchBarP
             autoCorrect={false}
             clearButtonMode="never"
             style={Platform.select({
-              ios: { height: 24 }, // Specific height for iOS
-              android: { paddingVertical: 8 }, // Padding for Android
+              ios: { height: 24 },
+              android: { paddingVertical: 8 },
             })}
           />
           

@@ -17,7 +17,7 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
       .map(author => author.name);
     return authorNames.join(', ');
   };
-
+ 
   const handleOpenLink = async () => {
     if (paper.url) {
       await Linking.openURL(paper.url);
@@ -32,7 +32,6 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
       onRequestClose={onClose}
     >
       <View className="flex-1 bg-white">
-        {/* Header */}
         <View className="flex-row justify-between items-center p-4 border-b border-gray-200">
           <TouchableOpacity onPress={onClose}>
             <Feather name="x" size={24} color="#000" />
@@ -44,7 +43,6 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
           )}
         </View>
 
-        {/* Content */}
         <ScrollView className="flex-1 p-4">
           <Text className="text-2xl font-bold mb-4">{paper.title}</Text>
           
