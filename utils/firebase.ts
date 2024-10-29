@@ -10,3 +10,4 @@ const firebaseConfig = {
 };
 
 export { firebaseConfig };
+ 

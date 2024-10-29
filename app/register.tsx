@@ -10,7 +10,7 @@ export default function RegisterScreen() {
   const handleRegister = () => {
     createUserWithEmailAndPassword(getAuth(), email, password)
       .then((user) => {
-        if (user) router.replace("/(tabs)");
+        if (user) router.replace("/onboarding");
       })
       .catch((err) => {
         alert(err?.message);
@@ -56,3 +56,4 @@ export default function RegisterScreen() {
     </View>
   );
 }
+ 

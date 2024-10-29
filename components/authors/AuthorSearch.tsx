@@ -120,7 +120,7 @@ export const AuthorSearch = () => {
             setHasMore(true);
             setCurrentQuery('');
           }}
-          placeholder='Search authors'
+          placeholder='Search Authors'
         />
         
         {isLoading ? (
