@@ -15,6 +15,7 @@ export interface Author {
     publicationTypes: string[] | null;
     externalIds: Record<string, string>;
     citationStyles: Record<string, string>;
+    uniqueId: string;
   }
   
   export interface SearchResponse {
