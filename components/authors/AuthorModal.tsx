@@ -4,6 +4,7 @@ import { Feather } from '@expo/vector-icons';
 import { Author } from '~/types/author';
 import { Paper } from '~/types/paper';
 import { PaperModal } from '../papers/PaperModal';
+import { FollowButton } from './FollowButton';
 
 interface AuthorModalProps {
   author: Author;
@@ -75,8 +76,14 @@ export const AuthorModal = ({ author, visible, onClose }: AuthorModalProps) => {
           </View>
 
           <ScrollView className="flex-1 p-4">
+          <View className="flex-row justify-between items-center mb-2">
             <Text className="text-2xl font-bold mb-4">{author.name}</Text>
-
+            <FollowButton 
+              authorId={author.authorId} 
+              authorName={author.name}
+              className="mx-2"
+            />
+            </View>
             {author.affiliations && author.affiliations.length > 0 && (
               <View className="mb-4">
                 <Text className="text-base font-semibold mb-2">Affiliations</Text>

@@ -148,4 +148,4 @@ export const AuthorSearch = () => {
       </View>
     </TouchableWithoutFeedback>
   );
-};
+}; 

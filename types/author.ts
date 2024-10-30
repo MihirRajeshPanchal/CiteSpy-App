@@ -29,3 +29,10 @@ export interface Author {
     offset: number;
     data: Author[];
   }
+
+  export interface FollowData {
+    authorId: string;
+    authorName: string;
+    userEmail: string;
+    followedAt: string;
+  }

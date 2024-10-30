@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Author } from '~/types/author';
 import { AuthorModal } from './AuthorModal';
+import { FollowButton } from './FollowButton';
 
 interface AuthorTileProps {
   author: Author;
@@ -50,7 +51,13 @@ export const AuthorTile = ({ author }: AuthorTileProps) => {
         onPress={() => setModalVisible(true)}
         className="bg-white rounded-lg shadow-sm p-4 mb-4"
       >
-        <Text className="text-lg font-semibold mb-2">{author.name}</Text>
+        <View className="flex-row justify-between items-center mb-2">
+          <Text className="text-lg font-semibold flex-1 mr-2">{author.name}</Text>
+          <FollowButton 
+            authorId={author.authorId} 
+            authorName={author.name}
+          />
+        </View>
         
         {renderAffiliations()}
         
@@ -83,4 +90,4 @@ export const AuthorTile = ({ author }: AuthorTileProps) => {
       />
     </>
   );
-};
+}; 

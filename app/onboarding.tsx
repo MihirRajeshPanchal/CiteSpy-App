@@ -202,4 +202,4 @@ export default function OnboardingScreen() {
       </Animated.View>
     </SafeAreaView>
   );
-}
+} 

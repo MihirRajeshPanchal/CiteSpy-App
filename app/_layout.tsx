@@ -5,6 +5,7 @@ import { firebaseConfig } from '../utils/firebase';
 import { initializeApp } from "firebase/app";
 import { initializeAuth, getAuth, getReactNativePersistence } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthorFollowProvider } from '../contexts/AuthorFollowContext';
 
 const app = initializeApp(firebaseConfig);
 
@@ -19,14 +20,16 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   return (
-    <Stack>
+    <AuthorFollowProvider>
+
+      <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         <Stack.Screen name="landing" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         <Stack.Screen name="register" options={{ headerShown: false }} />
-    </Stack>
+      </Stack>
+    </AuthorFollowProvider>
   );
 }
- 
