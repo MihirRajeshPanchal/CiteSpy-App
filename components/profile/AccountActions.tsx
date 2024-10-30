@@ -11,9 +11,10 @@ export const AccountActions: React.FC<AccountActionsProps> = ({
   onSignOut
 }) => (
   <View>
+    <Text className="text-lg font-medium mb-4">Account Settings</Text>
     <TouchableOpacity
       onPress={onChangePassword}
-      className="rounded-xl py-4 px-6 mb-4 bg-gray-800"
+      className="rounded-xl py-4 px-6 mb-4 bg-gray-600"
     >
       <Text className="text-white text-center text-lg font-semibold">
         Change Password

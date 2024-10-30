@@ -1,6 +1,16 @@
 import React from 'react';
-import { View, Text, Modal, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { 
+  View, 
+  Text, 
+  Modal, 
+  ScrollView, 
+  TouchableOpacity, 
+  Linking, 
+  Platform 
+} from 'react-native';
+import { Feather, FontAwesome5, FontAwesome6 } from '@expo/vector-icons';
+import { TabBarIcon } from '../../components/TabBarIcon';
+import * as Clipboard from 'expo-clipboard';
 import { Paper } from '~/types/paper';
 
 interface PaperModalProps {
@@ -11,78 +21,131 @@ interface PaperModalProps {
 
 export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
   const renderAuthors = () => {
-    if (!paper.authors || paper.authors.length === 0) return null;
+    if (!paper.authors || paper.authors.length === 0) return '';
     const authorNames = paper.authors
       .filter(author => author && author.name)
       .map(author => author.name);
     return authorNames.join(', ');
   };
- 
+
   const handleOpenLink = async () => {
-    if (paper.url) {
+    if (paper.openAccessPdf?.url) {
+      await Linking.openURL(paper.openAccessPdf.url);
+    } else if (paper.url) {
       await Linking.openURL(paper.url);
     }
+  };
+
+  const copyToClipboard = async (text: string, label: string) => {
+    await Clipboard.setStringAsync(text);
+    console.log(`${label} copied to clipboard`);
+  };
+
+  const renderCitationStyles = () => {
+    if (!paper.citationStyles) return null;
+    
+    return Object.entries(paper.citationStyles).map(([format, citation]) => (
+      <TouchableOpacity
+        key={format}
+        className="mt-2 p-3 bg-gray-100 rounded-lg"
+        onPress={() => copyToClipboard(citation, `${format} citation`)}
+      >
+        <Text className="text-sm font-semibold text-gray-600">{format}</Text>
+        <Text className="text-sm leading-5 ">{citation}</Text>
+      </TouchableOpacity>
+    ));
   };
 
   return (
     <Modal
       visible={visible}
       animationType="slide"
-      presentationStyle="pageSheet"
+      transparent={true}
       onRequestClose={onClose}
     >
-      <View className="flex-1 bg-white">
-        <View className="flex-row justify-between items-center p-4 border-b border-gray-200">
-          <TouchableOpacity onPress={onClose}>
-            <Feather name="x" size={24} color="#000" />
-          </TouchableOpacity>
-          {paper.url && (
-            <TouchableOpacity onPress={handleOpenLink}>
-              <Feather name="external-link" size={24} color="#000" />
+      <View className="flex-1 bg-black/50 justify-end">
+        <View className="bg-white rounded-t-2xl px-5 pb-10 max-h-[92%] min-h-[92%]">
+          <ScrollView>
+            <View className="flex-row justify-between items-center py-4">
+              <TouchableOpacity onPress={onClose} className="p-2">
+                <Feather name="x" size={24} color="#000" />
+              </TouchableOpacity>
+              {(paper.url || paper.openAccessPdf?.url) && (
+                <TouchableOpacity onPress={handleOpenLink} className="p-2">
+                  <TabBarIcon 
+                    Icon={paper.openAccessPdf?.url ? FontAwesome6 : Feather}
+                    name={paper.openAccessPdf?.url ? "file-pdf" : "external-link"} 
+                    size={24} 
+                    color="#111111" 
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <TouchableOpacity 
+              onPress={() => copyToClipboard(paper.title, 'Title')}
+              className="mb-5"
+            >
+              <Text className="text-lg font-bold mb-2">{paper.title}</Text>
             </TouchableOpacity>
-          )}
+
+            {renderAuthors() && (
+              <TouchableOpacity 
+                onPress={() => copyToClipboard(renderAuthors(), 'Authors')}
+                className="mb-5"
+              >
+                <Text className="text-base font-semibold text-gray-600">Authors</Text>
+                <Text className="text-base leading-6">{renderAuthors()}</Text>
+              </TouchableOpacity>
+            )}
+
+            {(paper.venue || paper.year) && (
+              <TouchableOpacity 
+                onPress={() => copyToClipboard(
+                  `${paper.venue || ''} ${paper.year || ''}`.trim(),
+                  'Publication info'
+                )}
+                className="mb-5"
+              >
+                <Text className="text-base font-semibold text-gray-600">Publication</Text>
+                <Text className="text-base leading-6">
+                  {paper.venue}
+                  {paper.venue && paper.year ? ' · ' : ''}
+                  {paper.year}
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            {paper.abstract && (
+              <TouchableOpacity 
+                onPress={() => copyToClipboard(paper.abstract!, 'Abstract')}
+                className="mb-5"
+              >
+                <Text className="text-base font-semibold text-gray-600">Abstract</Text>
+                <Text className="text-base leading-6">{paper.abstract}</Text>
+              </TouchableOpacity>
+            )}
+
+            <View className="mb-5">
+              <Text className="text-base font-semibold text-gray-600">Citations</Text>
+              <Text className="text-base leading-6">{paper.citationCount}</Text>
+            </View>
+
+            {paper.publicationTypes && paper.publicationTypes.length > 0 && (
+              <View className="mb-5">
+                <Text className="text-base font-semibold text-gray-600">Publication Type</Text>
+                <Text className="text-base leading-6">
+                  {paper.publicationTypes.join(', ')}
+                </Text>
+              </View>
+            )}
+
+            <View className="mb-5">
+              <Text className="text-base font-semibold text-gray-600">Citation Styles</Text>
+              {renderCitationStyles()}
+            </View>
+          </ScrollView>
         </View>
-
-        <ScrollView className="flex-1 p-4">
-          <Text className="text-2xl font-bold mb-4">{paper.title}</Text>
-          
-          {renderAuthors() && (
-            <View className="mb-4">
-              <Text className="text-base font-semibold mb-1">Authors</Text>
-              <Text className="text-gray-700">{renderAuthors()}</Text>
-            </View>
-          )}
-
-          {(paper.venue || paper.year) && (
-            <View className="mb-4">
-              <Text className="text-base font-semibold mb-1">Publication</Text>
-              <Text className="text-gray-700">
-                {paper.venue}
-                {paper.venue && paper.year ? ' · ' : ''}
-                {paper.year}
-              </Text>
-            </View>
-          )}
-
-          {paper.abstract && (
-            <View className="mb-4">
-              <Text className="text-base font-semibold mb-1">Abstract</Text>
-              <Text className="text-gray-700">{paper.abstract}</Text>
-            </View>
-          )}
-
-          <View className="mb-4">
-            <Text className="text-base font-semibold mb-1">Citations</Text>
-            <Text className="text-gray-700">{paper.citationCount}</Text>
-          </View>
-
-          {paper.publicationTypes && paper.publicationTypes.length > 0 && (
-            <View className="mb-4">
-              <Text className="text-base font-semibold mb-1">Publication Type</Text>
-              <Text className="text-gray-700">{paper.publicationTypes.join(', ')}</Text>
-            </View>
-          )}
-        </ScrollView>
       </View>
     </Modal>
   );

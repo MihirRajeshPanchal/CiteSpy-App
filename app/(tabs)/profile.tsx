@@ -132,11 +132,9 @@ export default function Profile() {
         throw new Error('User not authenticated');
       }
 
-      // Reauthenticate user
       const credential = EmailAuthProvider.credential(user.email, currentPassword);
       await reauthenticateWithCredential(user, credential);
 
-      // Update password
       await updatePassword(user, newPassword);
 
       Alert.alert('Success', 'Password updated successfully');
@@ -212,7 +210,7 @@ export default function Profile() {
             <TouchableOpacity
               onPress={handleSave}
               disabled={isSaving}
-              className={`rounded-xl py-4 px-6 mb-4 ${
+              className={`rounded-xl py-4 px-6 ${
                 isSaving ? 'bg-gray-400' : 'bg-gray-900'
               }`}
             >

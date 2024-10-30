@@ -38,7 +38,7 @@ export const PaperSearch = () => {
           query,
           limit: (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT).toString(),
           offset: currentOffset.toString(),
-          fields: 'paperId,title,url,venue,year,authors,abstract,citationCount,publicationTypes,citationStyles,externalIds'
+          fields: 'paperId,title,url,venue,year,authors,abstract,citationCount,publicationTypes,citationStyles,externalIds,openAccessPdf'
         }), {
           headers: { 'X-API-KEY': S2_API_KEY || '' }
         }
