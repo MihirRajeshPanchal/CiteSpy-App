@@ -29,11 +29,14 @@ export const AuthorModal = ({ author, visible, onClose }: AuthorModalProps) => {
     return (
       <View className="mb-4">
         <Text className="text-base font-semibold mb-2">External IDs</Text>
-        {Object.entries(author.externalIds).map(([platform, ids]) => (
-          <Text key={platform} className="text-gray-700">
-            {platform}: {ids.join(', ')}
-          </Text>
-        ))}
+        {Object.entries(author.externalIds).map(([platform, ids]) => {
+          const idList = Array.isArray(ids) ? ids : [ids].filter(Boolean);
+          return idList.length > 0 ? (
+            <Text key={platform} className="text-gray-700">
+              {platform}: {idList.join(', ')}
+            </Text>
+          ) : null;
+        })}
       </View>
     );
   };
@@ -76,13 +79,14 @@ export const AuthorModal = ({ author, visible, onClose }: AuthorModalProps) => {
           </View>
 
           <ScrollView className="flex-1 p-4">
-          <View className="flex-row justify-between items-center mb-2">
-            <Text className="text-2xl font-bold mb-4">{author.name}</Text>
-            <FollowButton 
-              authorId={author.authorId} 
-              authorName={author.name}
-              className="mx-2"
-            />
+            <View className="flex-row justify-between items-center mb-2">
+              <Text className="text-2xl font-bold mb-4">{author.name}</Text>
+              <FollowButton 
+                authorId={author.authorId} 
+                authorName={author.name}
+                authorUrl={author.url}
+                className="mx-2"
+              />
             </View>
             {author.affiliations && author.affiliations.length > 0 && (
               <View className="mb-4">
@@ -134,4 +138,4 @@ export const AuthorModal = ({ author, visible, onClose }: AuthorModalProps) => {
       )}
     </>
   );
-};
+}; 

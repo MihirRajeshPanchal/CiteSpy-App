@@ -8,10 +8,11 @@ import { useAuthorFollow } from '../../contexts/AuthorFollowContext';
 interface FollowButtonProps {
   authorId: string;
   authorName: string;
+  authorUrl?: string;
   className?: string;
 }
 
-export const FollowButton = ({ authorId, authorName, className = '' }: FollowButtonProps) => {
+export const FollowButton = ({ authorId, authorName,authorUrl, className = '' }: FollowButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { checkIfFollowing, setFollowStatus } = useAuthorFollow();
   const auth = getAuth();
@@ -39,6 +40,7 @@ export const FollowButton = ({ authorId, authorName, className = '' }: FollowBut
         const followData: FollowData = {
           authorId,
           authorName,
+          authorUrl,
           userEmail,
           followedAt: new Date().toISOString(),
         };

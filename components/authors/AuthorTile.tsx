@@ -56,6 +56,7 @@ export const AuthorTile = ({ author }: AuthorTileProps) => {
           <FollowButton 
             authorId={author.authorId} 
             authorName={author.name}
+            authorUrl={author.url}
           />
         </View>
         

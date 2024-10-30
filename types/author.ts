@@ -33,6 +33,7 @@ export interface Author {
   export interface FollowData {
     authorId: string;
     authorName: string;
+    authorUrl?: string;
     userEmail: string;
     followedAt: string;
   }
