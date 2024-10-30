@@ -4,6 +4,7 @@ import { HeaderButton } from '../../components/HeaderButton';
 import { TabBarIcon } from '../../components/TabBarIcon';
 import React, { useState } from "react";
 import { getAuth } from "firebase/auth";
+import { Linking } from 'react-native';
 import { router } from "expo-router";
 
 export default function TabLayout() {
@@ -29,9 +30,9 @@ export default function TabLayout() {
           title: 'Home',
           tabBarIcon: ({ color }) => <TabBarIcon Icon={FontAwesome5} size={26} name="home" color={color} />,
           headerRight: () => (
-            <Link href="/modal" asChild>
-              <HeaderButton />
-            </Link>
+            <HeaderButton
+              onPress={() => Linking.openURL('https://github.com/MihirRajeshPanchal/CiteSpy-App')}
+            />
           ),
         }}
       />

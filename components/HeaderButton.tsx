@@ -1,4 +1,4 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { forwardRef } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
@@ -7,10 +7,10 @@ export const HeaderButton = forwardRef<typeof Pressable, { onPress?: () => void 
     return (
       <Pressable onPress={onPress}>
         {({ pressed }) => (
-          <FontAwesome
-            name="info-circle"
-            size={25}
-            color="gray"
+          <AntDesign
+            name="github"
+            size={24}
+            color="black"
             style={[
               styles.headerRight,
               {
