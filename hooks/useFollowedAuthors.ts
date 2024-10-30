@@ -40,4 +40,4 @@ export const useFollowedAuthors = () => {
   }, []);
 
   return { followedAuthors, loading, error, refresh: fetchFollowedAuthors };
-};
+}; 

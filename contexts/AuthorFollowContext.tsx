@@ -78,4 +78,4 @@ export const AuthorFollowProvider: React.FC<{ children: React.ReactNode }> = ({ 
       {children}
     </AuthorFollowContext.Provider>
   );
-};
+}; 

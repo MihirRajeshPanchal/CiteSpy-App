@@ -1,17 +1,18 @@
 import React from 'react';
-import { 
-  View, 
-  Text, 
-  Modal, 
-  ScrollView, 
-  TouchableOpacity, 
-  Linking, 
-  Platform 
+import {
+  View,
+  Text,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  Linking,
+  Platform
 } from 'react-native';
 import { Feather, FontAwesome5, FontAwesome6 } from '@expo/vector-icons';
 import { TabBarIcon } from '../../components/TabBarIcon';
 import * as Clipboard from 'expo-clipboard';
 import { Paper } from '~/types/paper';
+import { BookmarkButton } from './BookmarkButton';
 
 interface PaperModalProps {
   paper: Paper;
@@ -43,7 +44,7 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
 
   const renderCitationStyles = () => {
     if (!paper.citationStyles) return null;
-    
+
     return Object.entries(paper.citationStyles).map(([format, citation]) => (
       <TouchableOpacity
         key={format}
@@ -64,33 +65,37 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
       onRequestClose={onClose}
     >
       <View className="flex-1 bg-black/50 justify-end">
-        <View className="bg-white rounded-t-2xl px-5 pb-10 max-h-[92%] min-h-[92%]">
+        <View className="bg-white rounded-t-2xl px-5 max-h-[92%] min-h-[92%]">
           <ScrollView>
             <View className="flex-row justify-between items-center py-4">
               <TouchableOpacity onPress={onClose} className="p-2">
                 <Feather name="x" size={24} color="#000" />
               </TouchableOpacity>
-              {(paper.url || paper.openAccessPdf?.url) && (
-                <TouchableOpacity onPress={handleOpenLink} className="p-2">
-                  <TabBarIcon 
-                    Icon={paper.openAccessPdf?.url ? FontAwesome6 : Feather}
-                    name={paper.openAccessPdf?.url ? "file-pdf" : "external-link"} 
-                    size={24} 
-                    color="#111111" 
-                  />
-                </TouchableOpacity>
-              )}
+              <View className="flex-row items-center">
+                <BookmarkButton paper={paper} />
+                {(paper.url || paper.openAccessPdf?.url) && (
+                  <TouchableOpacity onPress={handleOpenLink} className="p-2 ml-2">
+                    <TabBarIcon
+                      Icon={paper.openAccessPdf?.url ? FontAwesome6 : Feather}
+                      name={paper.openAccessPdf?.url ? "file-pdf" : "external-link"}
+                      size={24}
+                      color="#111111"
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => copyToClipboard(paper.title, 'Title')}
-              className="mb-5"
+              className="mb-3"
             >
-              <Text className="text-lg font-bold mb-2">{paper.title}</Text>
+              <Text className="text-lg font-bold">{paper.title}</Text>
             </TouchableOpacity>
 
+
             {renderAuthors() && (
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => copyToClipboard(renderAuthors(), 'Authors')}
                 className="mb-5"
               >
@@ -100,7 +105,7 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
             )}
 
             {(paper.venue || paper.year) && (
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => copyToClipboard(
                   `${paper.venue || ''} ${paper.year || ''}`.trim(),
                   'Publication info'
@@ -117,7 +122,7 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
             )}
 
             {paper.abstract && (
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => copyToClipboard(paper.abstract!, 'Abstract')}
                 className="mb-5"
               >

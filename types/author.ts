@@ -36,4 +36,4 @@ export interface Author {
     authorUrl?: string;
     userEmail: string;
     followedAt: string;
-  }
+  } 

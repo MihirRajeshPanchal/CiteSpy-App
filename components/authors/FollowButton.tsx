@@ -79,4 +79,4 @@ export const FollowButton = ({ authorId, authorName,authorUrl, className = '' }:
       </Text>
     </TouchableOpacity>
   );
-};
+}; 

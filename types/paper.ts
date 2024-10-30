@@ -29,4 +29,4 @@
     next: number;
     offset: number;
     total: number;
-  }
+  } 

@@ -91,4 +91,4 @@ export const AuthorTile = ({ author }: AuthorTileProps) => {
       />
     </>
   );
-}; 
+};  

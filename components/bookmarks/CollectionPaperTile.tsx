@@ -1,29 +1,48 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Paper } from '~/types/paper';
-import { PaperModal } from './PaperModal';
-import { BookmarkButton } from './BookmarkButton';
+import { PaperModal } from '../papers/PaperModal';
+import { useBookmarks } from '~/contexts/BookMarkContext';
 
-interface PaperTileProps {
+interface CollectionPaperTileProps {
   paper: Paper;
+  collectionId: string;
 }
 
-export const PaperTile = ({ paper }: PaperTileProps) => {
+export const CollectionPaperTile = ({ paper, collectionId }: CollectionPaperTileProps) => {
   const [modalVisible, setModalVisible] = React.useState(false);
+  const { removePaperFromCollection } = useBookmarks();
+
+  const handleDelete = async () => {
+    Alert.alert(
+      'Remove Paper',
+      'Are you sure you want to remove this paper from the collection?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await removePaperFromCollection(collectionId, paper.paperId);
+            } catch (error) {
+              Alert.alert('Error', 'Failed to remove paper from collection');
+            }
+          },
+        },
+      ]
+    );
+  };
 
   const renderAuthors = () => {
-    if (!paper.authors || paper.authors.length === 0) {
-      return null;
-    }
+    if (!paper.authors || paper.authors.length === 0) return null;
 
     const authorNames = paper.authors
       .filter(author => author && author.name)
       .map(author => author.name);
 
-    if (authorNames.length === 0) {
-      return null;
-    }
+    if (authorNames.length === 0) return null;
 
     const displayAuthors = authorNames.slice(0, 3);
     const hasMore = authorNames.length > 3;
@@ -37,9 +56,7 @@ export const PaperTile = ({ paper }: PaperTileProps) => {
   };
 
   const renderVenueAndYear = () => {
-    if (!paper.venue && !paper.year) {
-      return null;
-    }
+    if (!paper.venue && !paper.year) return null;
 
     return (
       <Text className="text-sm text-gray-500 mb-2">
@@ -60,7 +77,12 @@ export const PaperTile = ({ paper }: PaperTileProps) => {
           <View className="flex-1 mr-2">
             <Text className="text-lg font-semibold">{paper.title}</Text>
           </View>
-          <BookmarkButton paper={paper} />
+          <TouchableOpacity
+            onPress={handleDelete}
+            className="p-2"
+          >
+            <Feather name="trash-2" size={20} color="#EF4444" />
+          </TouchableOpacity>
         </View>
         
         <View className="flex-row items-center mb-2">
