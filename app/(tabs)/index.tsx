@@ -169,7 +169,6 @@ export default function Home() {
                 { scale: 1 - index * 0.05 },
                 { translateY: index * 20 },
               ],
-              opacity: 1 - index * 0.2,
             }}
           />
         ))}

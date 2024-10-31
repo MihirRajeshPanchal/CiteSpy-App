@@ -105,7 +105,7 @@ export const PaperSearch = () => {
   };
 
   const EmptyListComponent = () => {
-    if (!isExpanded) return null;
+    if (isExpanded) return null;
     return (
       <View className="flex-1 justify-center items-center p-4">
         <Text className="text-gray-500 text-center">
