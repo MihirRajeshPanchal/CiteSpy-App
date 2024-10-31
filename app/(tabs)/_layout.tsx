@@ -1,22 +1,31 @@
-import { Link, Tabs } from 'expo-router';
+import { Link, Tabs, router } from 'expo-router';
 import { FontAwesome5, Foundation, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import { HeaderButton } from '../../components/HeaderButton';
 import { TabBarIcon } from '../../components/TabBarIcon';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { Linking } from 'react-native';
-import { router } from "expo-router";
 
 export default function TabLayout() {
-
   const [isLoading, setIsLoading] = useState(true);
+  const auth = getAuth();
 
-  getAuth().onAuthStateChanged((user) => {
-    setIsLoading(false);
-    if (!user) {
-      router.replace("/landing");
-    }
-  });
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setIsLoading(false);
+      if (!user) {
+        setTimeout(() => {
+          router.replace("/landing");
+        }, 0);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <Tabs
@@ -27,7 +36,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'CiteSpy',
           tabBarIcon: ({ color }) => <TabBarIcon Icon={FontAwesome5} size={26} name="home" color={color} />,
           headerRight: () => (
             <HeaderButton
@@ -67,4 +76,4 @@ export default function TabLayout() {
     </Tabs>
   );
 }
- 
+  
