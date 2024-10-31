@@ -48,7 +48,7 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthorFollowProvider>
+    // <AuthorFollowProvider>
       <BookmarkProvider>
         <Stack screenOptions={{ headerShown: true }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -59,6 +59,6 @@ export default function RootLayout() {
           <Stack.Screen name="register" options={{ headerShown: false }} />
         </Stack>
       </BookmarkProvider>
-    </AuthorFollowProvider>
+    // </AuthorFollowProvider>
   );
 }
