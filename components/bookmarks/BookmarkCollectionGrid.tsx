@@ -37,7 +37,10 @@ export const BookmarkCollectionGrid = () => {
       setNewCollectionName("");
       setShowCreateModal(false);
     } catch (error) {
-      Alert.alert("Error", "Failed to create collection");
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Failed to create collection";
+      Alert.alert("Error", errorMessage);
     }
   };
 

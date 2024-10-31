@@ -109,22 +109,33 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const userId = auth.currentUser?.uid;
       if (!userId) throw new Error("User not authenticated");
-
+  
+      const trimmedName = name.trim();
+      if (!trimmedName) {
+        throw new Error("Collection name cannot be empty");
+      }
+  
+      const existingCollection = collections.find(
+        (collection) => collection.name.toLowerCase() === trimmedName.toLowerCase()
+      );
+  
+      if (existingCollection) {
+        throw new Error("A collection with this name already exists");
+      }
+  
       const collectionData: Omit<BookmarkCollection, "id"> = {
-        name,
+        name: trimmedName,
         createdAt: new Date().toISOString(),
         paperCount: 0,
       };
-
+  
       const collectionRef = doc(
-        collection(db, `user_collections/${userId}/collections`),
+        collection(db, `user_collections/${userId}/collections`)
       );
       await setDoc(collectionRef, collectionData);
       await refreshCollections();
-      await refreshCollections();
     } catch (err) {
-      console.error("Error creating collection:", err);
-      throw new Error("Failed to create collection");
+      throw err;
     }
   };
 
