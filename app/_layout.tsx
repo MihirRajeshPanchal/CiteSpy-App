@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
 import "../global.css";
 import { Stack } from "expo-router";
 import { firebaseConfig } from "../utils/firebase";
@@ -17,11 +19,34 @@ const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
 
+SplashScreen.preventAutoHideAsync();
+
 export const unstable_settings = {
   initialRouteName: "(tabs)",
 };
 
 export default function RootLayout() {
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await new Promise(resolve => setTimeout(resolve, 1000)); 
+
+        setAppIsReady(true);
+        await SplashScreen.hideAsync();
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  if (!appIsReady) {
+    return null;
+  }
+
   return (
     <AuthorFollowProvider>
       <BookmarkProvider>
