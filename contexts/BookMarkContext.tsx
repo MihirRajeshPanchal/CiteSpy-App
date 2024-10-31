@@ -8,6 +8,7 @@ import {
   deleteDoc,
   collection,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import type { Paper } from "~/types/paper";
 
@@ -25,6 +26,7 @@ interface BookmarkContextType {
   error: string | null;
   createCollection: (name: string) => Promise<void>;
   deleteCollection: (collectionId: string) => Promise<void>;
+  editCollection: (collectionId: string, newName: string) => Promise<void>; 
   addPaperToCollection: (collectionId: string, paper: Paper) => Promise<void>;
   removePaperFromCollection: (
     collectionId: string,
@@ -156,6 +158,39 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const editCollection = async (collectionId: string, newName: string) => {
+    try {
+      const userId = auth.currentUser?.uid;
+      if (!userId) throw new Error("User not authenticated");
+
+      const trimmedName = newName.trim();
+      if (!trimmedName) {
+        throw new Error("Collection name cannot be empty");
+      }
+
+      const existingCollection = collections.find(
+        (collection) => 
+          collection.id !== collectionId && 
+          collection.name.toLowerCase() === trimmedName.toLowerCase()
+      );
+
+      if (existingCollection) {
+        throw new Error("A collection with this name already exists");
+      }
+
+      const collectionRef = doc(
+        db,
+        `user_collections/${userId}/collections/${collectionId}`
+      );
+
+      await updateDoc(collectionRef, { name: trimmedName });
+
+      await refreshCollections();
+    } catch (err) {
+      throw err;
+    }
+  };
+
   const addPaperToCollection = async (collectionId: string, paper: Paper) => {
     try {
       const userId = auth.currentUser?.uid;
@@ -240,6 +275,7 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({
         error,
         createCollection,
         deleteCollection,
+        editCollection,
         addPaperToCollection,
         removePaperFromCollection,
         refreshCollections,
