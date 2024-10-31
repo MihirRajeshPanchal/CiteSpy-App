@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   ScrollView,
@@ -30,7 +31,6 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Password change states
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -39,11 +39,14 @@ export default function Profile() {
   const auth = getAuth();
   const db = getFirestore();
 
-  useEffect(() => {
-    loadUserData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadUserData();
+    }, [])
+  );
 
   const loadUserData = async () => {
+    setIsLoading(true);
     try {
       const userId = auth.currentUser?.uid;
       if (!userId) {
@@ -63,7 +66,6 @@ export default function Profile() {
       setIsLoading(false);
     }
   };
-
   const addTopic = () => {
     const trimmedTopic = newTopic.trim();
 

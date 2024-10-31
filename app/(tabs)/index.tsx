@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, SafeAreaView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useFocusEffect } from "@react-navigation/native";
 import { InterestSlider } from "~/components/home/InterestSlider";
 import { PaperCard } from "~/components/home/PaperCard";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
@@ -23,20 +24,6 @@ export default function Home() {
   const db = getFirestore();
   const auth = getAuth();
 
-  React.useEffect(() => {
-    loadUserData();
-  }, []);
-
-  React.useEffect(() => {
-    if (selectedInterest) {
-      setChangingInterest(true);
-      const timer = setTimeout(() => {
-        setChangingInterest(false);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [selectedInterest]);
-
   const loadUserData = async () => {
     setLoadError("");
     try {
@@ -53,8 +40,7 @@ export default function Home() {
         const userInterests = userInterestsDoc.data().interests || [];
         setInterests(userInterests);
         if (userInterests.length > 0 && !selectedInterest) {
-          const randomIndex = Math.floor(Math.random() * userInterests.length);
-          setSelectedInterest(userInterests[randomIndex]);
+          setSelectedInterest(userInterests[0]);
         }
       } else {
         await setDoc(userInterestsRef, {
@@ -69,6 +55,22 @@ export default function Home() {
       setLoadingInterests(false);
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadUserData();
+    }, [])
+  );
+
+  React.useEffect(() => {
+    if (selectedInterest) {
+      setChangingInterest(true);
+      const timer = setTimeout(() => {
+        setChangingInterest(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedInterest]);
 
   const handleSwipe = async (paperId: string, direction: "left" | "right") => {
     setPapers((prev) => prev?.filter((p) => p.paperId !== paperId) || []);
@@ -87,7 +89,6 @@ export default function Home() {
     setSelectedInterest(newInterest);
     setPapers([]);
   };
-
   const renderContent = () => {
     if (loadingInterests) {
       return <Text className="text-gray-600">Loading interests...</Text>;
