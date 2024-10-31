@@ -122,6 +122,13 @@ export default function Profile() {
     }
   };
 
+  const openPasswordModal = () => {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setPasswordModalVisible(true);
+  };
+
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
       Alert.alert("Error", "New passwords do not match");
@@ -227,7 +234,7 @@ export default function Profile() {
           </View>
 
           <AccountActions
-            onChangePassword={() => setPasswordModalVisible(true)}
+            onChangePassword={openPasswordModal}
             onSignOut={handleSignOut}
           />
         </View>
