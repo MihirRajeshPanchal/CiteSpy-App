@@ -17,8 +17,8 @@ export default function Home() {
   const [changingInterest, setChangingInterest] = React.useState(false);
 
   const { papers, setPapers, isLoading, error, loadMore, hasMore } = usePapers(
-    selectedInterest,
-    interests,
+    interests.includes(selectedInterest) ? selectedInterest : (interests[0] || ''),
+    interests
   );
 
   const db = getFirestore();
@@ -32,16 +32,20 @@ export default function Home() {
         router.replace("/landing");
         return;
       }
-
+  
       const userInterestsRef = doc(db, "user_interests", userId);
       const userInterestsDoc = await getDoc(userInterestsRef);
-
+  
       if (userInterestsDoc.exists()) {
         const userInterests = userInterestsDoc.data().interests || [];
         setInterests(userInterests);
-        if (userInterests.length > 0 && !selectedInterest) {
-          setSelectedInterest(userInterests[0]);
-        }
+        
+        const newSelectedInterest = 
+          userInterests.includes(selectedInterest) 
+            ? selectedInterest 
+            : (userInterests[0] || '');
+        
+        setSelectedInterest(newSelectedInterest);
       } else {
         await setDoc(userInterestsRef, {
           interests: [],
@@ -61,7 +65,7 @@ export default function Home() {
       loadUserData();
     }, [])
   );
-
+  
   React.useEffect(() => {
     if (selectedInterest) {
       setChangingInterest(true);
