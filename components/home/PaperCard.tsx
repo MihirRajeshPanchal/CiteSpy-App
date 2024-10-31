@@ -95,7 +95,7 @@ export function PaperCard({ paper, onSwipe, style }: PaperCardProps) {
               <Text className="font-semibold text-gray-700">Abstract</Text>
               <Text
                 className="text-gray-600 leading-relaxed"
-                numberOfLines={Math.floor((SCREEN_HEIGHT * 0.4) / 20)}
+                numberOfLines={Math.floor((SCREEN_HEIGHT * 0.35) / 20)}
                 onTextLayout={handleTextLayout}
               >
                 {paper.abstract}

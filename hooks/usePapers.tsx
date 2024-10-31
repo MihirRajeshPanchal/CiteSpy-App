@@ -77,7 +77,6 @@ export function usePapers(selectedInterest: string, interests: string[]) {
     [selectedInterest, interests, offset, hasMore],
   );
 
-  // Reset and load new papers when interest changes
   useEffect(() => {
     setOffset(0);
     setHasMore(true);

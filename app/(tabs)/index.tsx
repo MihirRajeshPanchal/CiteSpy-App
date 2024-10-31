@@ -27,11 +27,9 @@ export default function Home() {
     loadUserData();
   }, []);
 
-  // Add effect to handle interest changes
   React.useEffect(() => {
     if (selectedInterest) {
       setChangingInterest(true);
-      // Reset changing interest state after a short delay to show loading
       const timer = setTimeout(() => {
         setChangingInterest(false);
       }, 1000);
@@ -87,7 +85,7 @@ export default function Home() {
 
   const handleInterestChange = (newInterest: string) => {
     setSelectedInterest(newInterest);
-    setPapers([]); // Clear existing papers when interest changes
+    setPapers([]);
   };
 
   const renderContent = () => {
@@ -151,7 +149,7 @@ export default function Home() {
     }
 
     return (
-      <View className="relative w-full min-h-[600px] mt-9">
+      <View className="relative w-full min-h-[550px]">
         {papers.slice(0, 3).map((paper, index) => (
           <PaperCard
             key={paper.paperId}
