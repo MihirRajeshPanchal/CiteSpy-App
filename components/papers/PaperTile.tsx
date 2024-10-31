@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { Paper } from '~/types/paper';
-import { PaperModal } from './PaperModal';
-import { BookmarkButton } from './BookmarkButton';
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { Paper } from "~/types/paper";
+import { PaperModal } from "./PaperModal";
+import { BookmarkButton } from "./BookmarkButton";
 
 interface PaperTileProps {
   paper: Paper;
@@ -18,8 +18,8 @@ export const PaperTile = ({ paper }: PaperTileProps) => {
     }
 
     const authorNames = paper.authors
-      .filter(author => author && author.name)
-      .map(author => author.name);
+      .filter((author) => author && author.name)
+      .map((author) => author.name);
 
     if (authorNames.length === 0) {
       return null;
@@ -30,8 +30,8 @@ export const PaperTile = ({ paper }: PaperTileProps) => {
 
     return (
       <Text className="text-sm text-gray-600">
-        {displayAuthors.join(', ')}
-        {hasMore ? ' et al.' : ''}
+        {displayAuthors.join(", ")}
+        {hasMore ? " et al." : ""}
       </Text>
     );
   };
@@ -44,7 +44,7 @@ export const PaperTile = ({ paper }: PaperTileProps) => {
     return (
       <Text className="text-sm text-gray-500 mb-2">
         {paper.venue}
-        {paper.venue && paper.year ? ' · ' : ''}
+        {paper.venue && paper.year ? " · " : ""}
         {paper.year}
       </Text>
     );
@@ -52,7 +52,7 @@ export const PaperTile = ({ paper }: PaperTileProps) => {
 
   return (
     <>
-      <TouchableOpacity 
+      <TouchableOpacity
         onPress={() => setModalVisible(true)}
         className="bg-white rounded-lg shadow-sm p-4 mb-4"
       >
@@ -62,19 +62,17 @@ export const PaperTile = ({ paper }: PaperTileProps) => {
           </View>
           <BookmarkButton paper={paper} />
         </View>
-        
-        <View className="flex-row items-center mb-2">
-          {renderAuthors()}
-        </View>
-        
+
+        <View className="flex-row items-center mb-2">{renderAuthors()}</View>
+
         {renderVenueAndYear()}
-        
+
         {paper.abstract && (
           <Text numberOfLines={3} className="text-sm text-gray-700 mb-2">
             {paper.abstract}
           </Text>
         )}
-         
+
         <View className="flex-row items-center justify-between">
           <Text className="text-sm text-gray-500">
             Citations: {paper.citationCount}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -6,13 +6,13 @@ import {
   ScrollView,
   TouchableOpacity,
   Linking,
-  Platform
-} from 'react-native';
-import { Feather, FontAwesome5, FontAwesome6 } from '@expo/vector-icons';
-import { TabBarIcon } from '../../components/TabBarIcon';
-import * as Clipboard from 'expo-clipboard';
-import { Paper } from '~/types/paper';
-import { BookmarkButton } from './BookmarkButton';
+  Platform,
+} from "react-native";
+import { Feather, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
+import { TabBarIcon } from "../../components/TabBarIcon";
+import * as Clipboard from "expo-clipboard";
+import { Paper } from "~/types/paper";
+import { BookmarkButton } from "./BookmarkButton";
 
 interface PaperModalProps {
   paper: Paper;
@@ -22,11 +22,11 @@ interface PaperModalProps {
 
 export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
   const renderAuthors = () => {
-    if (!paper.authors || paper.authors.length === 0) return '';
+    if (!paper.authors || paper.authors.length === 0) return "";
     const authorNames = paper.authors
-      .filter(author => author && author.name)
-      .map(author => author.name);
-    return authorNames.join(', ');
+      .filter((author) => author && author.name)
+      .map((author) => author.name);
+    return authorNames.join(", ");
   };
 
   const handleOpenLink = async () => {
@@ -74,10 +74,15 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
               <View className="flex-row items-center">
                 <BookmarkButton paper={paper} />
                 {(paper.url || paper.openAccessPdf?.url) && (
-                  <TouchableOpacity onPress={handleOpenLink} className="p-2 ml-2">
+                  <TouchableOpacity
+                    onPress={handleOpenLink}
+                    className="p-2 ml-2"
+                  >
                     <TabBarIcon
                       Icon={paper.openAccessPdf?.url ? FontAwesome6 : Feather}
-                      name={paper.openAccessPdf?.url ? "file-pdf" : "external-link"}
+                      name={
+                        paper.openAccessPdf?.url ? "file-pdf" : "external-link"
+                      }
                       size={24}
                       color="#111111"
                     />
@@ -87,35 +92,40 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
             </View>
 
             <TouchableOpacity
-              onPress={() => copyToClipboard(paper.title, 'Title')}
+              onPress={() => copyToClipboard(paper.title, "Title")}
               className="mb-3"
             >
               <Text className="text-lg font-bold">{paper.title}</Text>
             </TouchableOpacity>
 
-
             {renderAuthors() && (
               <TouchableOpacity
-                onPress={() => copyToClipboard(renderAuthors(), 'Authors')}
+                onPress={() => copyToClipboard(renderAuthors(), "Authors")}
                 className="mb-5"
               >
-                <Text className="text-base font-semibold text-gray-600">Authors</Text>
+                <Text className="text-base font-semibold text-gray-600">
+                  Authors
+                </Text>
                 <Text className="text-base leading-6">{renderAuthors()}</Text>
               </TouchableOpacity>
             )}
 
             {(paper.venue || paper.year) && (
               <TouchableOpacity
-                onPress={() => copyToClipboard(
-                  `${paper.venue || ''} ${paper.year || ''}`.trim(),
-                  'Publication info'
-                )}
+                onPress={() =>
+                  copyToClipboard(
+                    `${paper.venue || ""} ${paper.year || ""}`.trim(),
+                    "Publication info",
+                  )
+                }
                 className="mb-5"
               >
-                <Text className="text-base font-semibold text-gray-600">Publication</Text>
+                <Text className="text-base font-semibold text-gray-600">
+                  Publication
+                </Text>
                 <Text className="text-base leading-6">
                   {paper.venue}
-                  {paper.venue && paper.year ? ' · ' : ''}
+                  {paper.venue && paper.year ? " · " : ""}
                   {paper.year}
                 </Text>
               </TouchableOpacity>
@@ -123,30 +133,38 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
 
             {paper.abstract && (
               <TouchableOpacity
-                onPress={() => copyToClipboard(paper.abstract!, 'Abstract')}
+                onPress={() => copyToClipboard(paper.abstract!, "Abstract")}
                 className="mb-5"
               >
-                <Text className="text-base font-semibold text-gray-600">Abstract</Text>
+                <Text className="text-base font-semibold text-gray-600">
+                  Abstract
+                </Text>
                 <Text className="text-base leading-6">{paper.abstract}</Text>
               </TouchableOpacity>
             )}
 
             <View className="mb-5">
-              <Text className="text-base font-semibold text-gray-600">Citations</Text>
+              <Text className="text-base font-semibold text-gray-600">
+                Citations
+              </Text>
               <Text className="text-base leading-6">{paper.citationCount}</Text>
             </View>
 
             {paper.publicationTypes && paper.publicationTypes.length > 0 && (
               <View className="mb-5">
-                <Text className="text-base font-semibold text-gray-600">Publication Type</Text>
+                <Text className="text-base font-semibold text-gray-600">
+                  Publication Type
+                </Text>
                 <Text className="text-base leading-6">
-                  {paper.publicationTypes.join(', ')}
+                  {paper.publicationTypes.join(", ")}
                 </Text>
               </View>
             )}
 
             <View className="mb-5">
-              <Text className="text-base font-semibold text-gray-600">Citation Styles</Text>
+              <Text className="text-base font-semibold text-gray-600">
+                Citation Styles
+              </Text>
               {renderCitationStyles()}
             </View>
           </ScrollView>

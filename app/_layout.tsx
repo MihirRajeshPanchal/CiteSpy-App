@@ -1,11 +1,15 @@
-import '../global.css';
-import { Stack } from 'expo-router';
-import { firebaseConfig } from '../utils/firebase';
+import "../global.css";
+import { Stack } from "expo-router";
+import { firebaseConfig } from "../utils/firebase";
 import { initializeApp } from "firebase/app";
-import { initializeAuth, getAuth, getReactNativePersistence } from "firebase/auth";
+import {
+  initializeAuth,
+  getAuth,
+  getReactNativePersistence,
+} from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthorFollowProvider } from '../contexts/AuthorFollowContext';
-import { BookmarkProvider } from '~/contexts/BookMarkContext';
+import { AuthorFollowProvider } from "../contexts/AuthorFollowContext";
+import { BookmarkProvider } from "~/contexts/BookMarkContext";
 
 const app = initializeApp(firebaseConfig);
 
@@ -14,7 +18,7 @@ const auth = initializeAuth(app, {
 });
 
 export const unstable_settings = {
-  initialRouteName: '(tabs)',
+  initialRouteName: "(tabs)",
 };
 
 export default function RootLayout() {
@@ -32,4 +36,4 @@ export default function RootLayout() {
       </BookmarkProvider>
     </AuthorFollowProvider>
   );
-} 
+}

@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, Alert, View } from 'react-native';
-import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, setDoc, deleteDoc } from 'firebase/firestore';
-import { FollowData } from '~/types/author';
-import { useAuthorFollow } from '../../contexts/AuthorFollowContext';
+import React, { useState, useEffect } from "react";
+import {
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  Alert,
+  View,
+} from "react-native";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, setDoc, deleteDoc } from "firebase/firestore";
+import { FollowData } from "~/types/author";
+import { useAuthorFollow } from "../../contexts/AuthorFollowContext";
 
 interface FollowButtonProps {
   authorId: string;
@@ -12,7 +18,12 @@ interface FollowButtonProps {
   className?: string;
 }
 
-export const FollowButton = ({ authorId, authorName,authorUrl, className = '' }: FollowButtonProps) => {
+export const FollowButton = ({
+  authorId,
+  authorName,
+  authorUrl,
+  className = "",
+}: FollowButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { checkIfFollowing, setFollowStatus } = useAuthorFollow();
   const auth = getAuth();
@@ -27,7 +38,7 @@ export const FollowButton = ({ authorId, authorName,authorUrl, className = '' }:
       const userEmail = auth.currentUser?.email;
 
       if (!userId || !userEmail) {
-        Alert.alert('Error', 'Please sign in to follow authors');
+        Alert.alert("Error", "Please sign in to follow authors");
         return;
       }
 
@@ -48,8 +59,8 @@ export const FollowButton = ({ authorId, authorName,authorUrl, className = '' }:
         setFollowStatus(authorId, true);
       }
     } catch (error) {
-      console.error('Error toggling follow:', error);
-      Alert.alert('Error', 'Failed to update follow status');
+      console.error("Error toggling follow:", error);
+      Alert.alert("Error", "Failed to update follow status");
     } finally {
       setIsLoading(false);
     }
@@ -67,16 +78,16 @@ export const FollowButton = ({ authorId, authorName,authorUrl, className = '' }:
     <TouchableOpacity
       onPress={toggleFollow}
       className={`px-4 py-2 rounded-full ${
-        isFollowing ? 'bg-gray-200' : 'bg-gray-900'
+        isFollowing ? "bg-gray-200" : "bg-gray-900"
       } ${className}`}
     >
       <Text
         className={`text-sm font-medium ${
-          isFollowing ? 'text-gray-900' : 'text-white'
+          isFollowing ? "text-gray-900" : "text-white"
         }`}
       >
-        {isFollowing ? 'Following' : 'Follow'}
+        {isFollowing ? "Following" : "Follow"}
       </Text>
     </TouchableOpacity>
   );
-}; 
+};

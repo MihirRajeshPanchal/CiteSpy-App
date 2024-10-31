@@ -1,8 +1,15 @@
-import React from 'react';
-import { View, FlatList, ActivityIndicator, Text, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { SearchBar } from '../utils/SearchBar';
-import { PaperTile } from './PaperTile';
-import { Paper, SearchResponse } from '~/types/paper';
+import React from "react";
+import {
+  View,
+  FlatList,
+  ActivityIndicator,
+  Text,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { SearchBar } from "../utils/SearchBar";
+import { PaperTile } from "./PaperTile";
+import { Paper, SearchResponse } from "~/types/paper";
 
 const S2_API_KEY = process.env.EXPO_PUBLIC_S2_API_KEY;
 const INITIAL_LIMIT = 10;
@@ -13,11 +20,11 @@ export const PaperSearch = () => {
   const [papers, setPapers] = React.useState<Paper[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
-  const [error, setError] = React.useState('');
-  const [currentQuery, setCurrentQuery] = React.useState('');
+  const [error, setError] = React.useState("");
+  const [currentQuery, setCurrentQuery] = React.useState("");
   const [offset, setOffset] = React.useState(0);
   const [hasMore, setHasMore] = React.useState(true);
- 
+
   const searchPapers = async (query: string, reset: boolean = true) => {
     if (reset) {
       setIsLoading(true);
@@ -27,45 +34,50 @@ export const PaperSearch = () => {
     } else {
       setIsLoadingMore(true);
     }
-    
-    setError('');
-    
+
+    setError("");
+
     try {
       const currentOffset = reset ? 0 : offset;
       const response = await fetch(
-        'https://api.semanticscholar.org/graph/v1/paper/search?' +
-        new URLSearchParams({
-          query,
-          limit: (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT).toString(),
-          offset: currentOffset.toString(),
-          fields: 'paperId,title,url,venue,year,authors,abstract,citationCount,publicationTypes,citationStyles,externalIds,openAccessPdf'
-        }), {
-          headers: { 'X-API-KEY': S2_API_KEY || '' }
-        }
+        "https://api.semanticscholar.org/graph/v1/paper/search?" +
+          new URLSearchParams({
+            query,
+            limit: (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT).toString(),
+            offset: currentOffset.toString(),
+            fields:
+              "paperId,title,url,venue,year,authors,abstract,citationCount,publicationTypes,citationStyles,externalIds,openAccessPdf",
+          }),
+        {
+          headers: { "X-API-KEY": S2_API_KEY || "" },
+        },
       );
 
       if (!response.ok) {
-        throw new Error('Failed to fetch papers');
+        throw new Error("Failed to fetch papers");
       }
 
       const searchResponse: SearchResponse = await response.json();
 
       const newPapers = searchResponse.data.map((paper, index) => ({
         ...paper,
-        uniqueId: `${paper.paperId}-${currentOffset + index}`
+        uniqueId: `${paper.paperId}-${currentOffset + index}`,
       }));
-      
+
       if (reset) {
         setPapers(newPapers);
       } else {
-        setPapers(prevPapers => [...prevPapers, ...newPapers]);
+        setPapers((prevPapers) => [...prevPapers, ...newPapers]);
       }
-      
+
       setOffset(currentOffset + searchResponse.data.length);
-      setHasMore(searchResponse.data.length === (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT));
+      setHasMore(
+        searchResponse.data.length ===
+          (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT),
+      );
       setCurrentQuery(query);
     } catch (err) {
-      setError('Failed to load papers. Please try again.');
+      setError("Failed to load papers. Please try again.");
       console.error(err);
     } finally {
       if (reset) {
@@ -84,7 +96,7 @@ export const PaperSearch = () => {
 
   const renderFooter = () => {
     if (!isLoadingMore) return null;
-    
+
     return (
       <View className="py-4">
         <ActivityIndicator size="small" />
@@ -118,11 +130,11 @@ export const PaperSearch = () => {
             setPapers([]);
             setOffset(0);
             setHasMore(true);
-            setCurrentQuery('');
+            setCurrentQuery("");
           }}
-          placeholder='Search Papers'
+          placeholder="Search Papers"
         />
-        
+
         {isLoading ? (
           <View className="flex-1 justify-center items-center">
             <ActivityIndicator size="large" />

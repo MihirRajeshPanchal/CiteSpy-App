@@ -1,35 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   ScrollView,
   ActivityIndicator,
   Alert,
   TouchableOpacity,
-  Text
-} from 'react-native';
-import { Stack } from 'expo-router';
-import { getAuth, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { router } from 'expo-router';
+  Text,
+} from "react-native";
+import { Stack } from "expo-router";
+import {
+  getAuth,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
+import { router } from "expo-router";
 
-import { InterestBubble } from '~/components/profile/InterestBubble';
-import { UserInfo } from '~/components/profile/UserInfo';
-import { TopicInput } from '~/components/profile/TopicInput';
-import { PasswordChangeModal } from '~/components/profile/PasswordChangeModal';
-import { AccountActions } from '~/components/profile/AccountActions';
+import { InterestBubble } from "~/components/profile/InterestBubble";
+import { UserInfo } from "~/components/profile/UserInfo";
+import { TopicInput } from "~/components/profile/TopicInput";
+import { PasswordChangeModal } from "~/components/profile/PasswordChangeModal";
+import { AccountActions } from "~/components/profile/AccountActions";
 
 export default function Profile() {
-  const [userEmail, setUserEmail] = useState<string>('');
+  const [userEmail, setUserEmail] = useState<string>("");
   const [interests, setInterests] = useState<string[]>([]);
-  const [newTopic, setNewTopic] = useState<string>('');
+  const [newTopic, setNewTopic] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  
+
   // Password change states
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const auth = getAuth();
   const db = getFirestore();
@@ -42,18 +47,18 @@ export default function Profile() {
     try {
       const userId = auth.currentUser?.uid;
       if (!userId) {
-        router.replace('/landing');
+        router.replace("/landing");
         return;
       }
 
-      setUserEmail(auth.currentUser?.email || '');
-      
-      const userInterestsDoc = await getDoc(doc(db, 'user_interests', userId));
+      setUserEmail(auth.currentUser?.email || "");
+
+      const userInterestsDoc = await getDoc(doc(db, "user_interests", userId));
       if (userInterestsDoc.exists()) {
         setInterests(userInterestsDoc.data().interests || []);
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to load user data');
+      Alert.alert("Error", "Failed to load user data");
     } finally {
       setIsLoading(false);
     }
@@ -61,37 +66,37 @@ export default function Profile() {
 
   const addTopic = () => {
     const trimmedTopic = newTopic.trim();
-    
+
     if (!trimmedTopic) {
       return;
     }
 
     if (trimmedTopic.length > 50) {
-      Alert.alert('Error', 'Topic name must be less than 50 characters');
+      Alert.alert("Error", "Topic name must be less than 50 characters");
       return;
     }
 
     if (interests.includes(trimmedTopic)) {
-      Alert.alert('Error', 'This topic already exists');
+      Alert.alert("Error", "This topic already exists");
       return;
     }
 
     if (interests.length >= 20) {
-      Alert.alert('Error', 'Maximum 20 topics allowed');
+      Alert.alert("Error", "Maximum 20 topics allowed");
       return;
     }
 
-    setInterests(prev => [...prev, trimmedTopic]);
-    setNewTopic('');
+    setInterests((prev) => [...prev, trimmedTopic]);
+    setNewTopic("");
   };
 
   const deleteTopic = (topic: string) => {
-    setInterests(prev => prev.filter(t => t !== topic));
+    setInterests((prev) => prev.filter((t) => t !== topic));
   };
 
   const handleSave = async () => {
     if (interests.length === 0) {
-      Alert.alert('Error', 'Please add at least one research interest');
+      Alert.alert("Error", "Please add at least one research interest");
       return;
     }
 
@@ -99,17 +104,17 @@ export default function Profile() {
     try {
       const userId = auth.currentUser?.uid;
       if (!userId) {
-        throw new Error('User not authenticated');
+        throw new Error("User not authenticated");
       }
 
-      await updateDoc(doc(db, 'user_interests', userId), {
+      await updateDoc(doc(db, "user_interests", userId), {
         interests: interests,
         updatedAt: new Date().toISOString(),
       });
 
-      Alert.alert('Success', 'Your interests have been updated');
+      Alert.alert("Success", "Your interests have been updated");
     } catch (error) {
-      Alert.alert('Error', 'Failed to update interests');
+      Alert.alert("Error", "Failed to update interests");
     } finally {
       setIsSaving(false);
     }
@@ -117,57 +122,56 @@ export default function Profile() {
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'New passwords do not match');
+      Alert.alert("Error", "New passwords do not match");
       return;
     }
 
     if (newPassword.length < 6) {
-      Alert.alert('Error', 'New password must be at least 6 characters');
+      Alert.alert("Error", "New password must be at least 6 characters");
       return;
     }
 
     try {
       const user = auth.currentUser;
       if (!user || !user.email) {
-        throw new Error('User not authenticated');
+        throw new Error("User not authenticated");
       }
 
-      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        currentPassword,
+      );
       await reauthenticateWithCredential(user, credential);
 
       await updatePassword(user, newPassword);
 
-      Alert.alert('Success', 'Password updated successfully');
+      Alert.alert("Success", "Password updated successfully");
       setPasswordModalVisible(false);
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
     } catch (error: any) {
-      if (error.code === 'auth/wrong-password') {
-        Alert.alert('Error', 'Current password is incorrect');
+      if (error.code === "auth/wrong-password") {
+        Alert.alert("Error", "Current password is incorrect");
       } else {
-        Alert.alert('Error', 'Failed to update password');
+        Alert.alert("Error", "Failed to update password");
       }
     }
   };
 
   const handleSignOut = () => {
-    Alert.alert(
-      'Sign Out',
-      'Are you sure you want to sign out?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Sign Out',
-          onPress: () => {
-            auth.signOut().then(() => {
-              router.replace('/landing');
-            });
-          },
-          style: 'destructive',
+    Alert.alert("Sign Out", "Are you sure you want to sign out?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Sign Out",
+        onPress: () => {
+          auth.signOut().then(() => {
+            router.replace("/landing");
+          });
         },
-      ]
-    );
+        style: "destructive",
+      },
+    ]);
   };
 
   if (isLoading) {
@@ -180,14 +184,14 @@ export default function Profile() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'My Profile' }} />
+      <Stack.Screen options={{ title: "My Profile" }} />
       <ScrollView className="flex-1 bg-white">
         <View className="p-4">
           <UserInfo email={userEmail} />
 
           <View className="mb-6">
             <Text className="text-lg font-medium mb-4">Research Interests</Text>
-            
+
             <TopicInput
               value={newTopic}
               onChangeText={setNewTopic}
@@ -211,11 +215,11 @@ export default function Profile() {
               onPress={handleSave}
               disabled={isSaving}
               className={`rounded-xl py-4 px-6 ${
-                isSaving ? 'bg-gray-400' : 'bg-gray-900'
+                isSaving ? "bg-gray-400" : "bg-gray-900"
               }`}
             >
               <Text className="text-white text-center text-lg font-semibold">
-                {isSaving ? 'Saving...' : 'Save Changes'}
+                {isSaving ? "Saving..." : "Save Changes"}
               </Text>
             </TouchableOpacity>
           </View>
@@ -241,4 +245,3 @@ export default function Profile() {
     </>
   );
 }
-

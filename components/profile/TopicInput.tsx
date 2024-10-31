@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, TextInput, TouchableOpacity, Text } from 'react-native';
+import React from "react";
+import { View, TextInput, TouchableOpacity, Text } from "react-native";
 
 interface TopicInputProps {
   value: string;
@@ -12,7 +12,7 @@ export const TopicInput: React.FC<TopicInputProps> = ({
   value,
   onChangeText,
   onSubmit,
-  topicsCount
+  topicsCount,
 }) => (
   <>
     <View className="flex-row items-center mb-4">
@@ -31,8 +31,6 @@ export const TopicInput: React.FC<TopicInputProps> = ({
         <Text className="text-white">Add</Text>
       </TouchableOpacity>
     </View>
-    <Text className="text-sm text-gray-500 mb-4">
-      Topics: {topicsCount}/20
-    </Text>
+    <Text className="text-sm text-gray-500 mb-4">Topics: {topicsCount}/20</Text>
   </>
 );

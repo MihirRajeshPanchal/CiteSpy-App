@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, Dimensions } from "react-native";
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from "react-native-gesture-handler";
 import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   runOnJS,
-} from 'react-native-reanimated';
-import { Feather } from '@expo/vector-icons';
-import { Paper } from '~/types/paper';
-import { PaperModal } from '~/components/papers/PaperModal';
+} from "react-native-reanimated";
+import { Feather } from "@expo/vector-icons";
+import { Paper } from "~/types/paper";
+import { PaperModal } from "~/components/papers/PaperModal";
 
 interface PaperCardProps {
   paper: Paper;
-  onSwipe: (direction: 'left' | 'right') => void;
+  onSwipe: (direction: "left" | "right") => void;
   style?: any;
 }
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
 
 export function PaperCard({ paper, onSwipe, style }: PaperCardProps) {
-  if (!paper.abstract || paper.abstract.trim() === '') {
+  if (!paper.abstract || paper.abstract.trim() === "") {
     return null;
   }
 
@@ -49,9 +52,9 @@ export function PaperCard({ paper, onSwipe, style }: PaperCardProps) {
       if (Math.abs(event.translationX) > SWIPE_THRESHOLD) {
         translateX.value = withSpring(
           event.translationX > 0 ? SCREEN_WIDTH : -SCREEN_WIDTH,
-          springConfig
+          springConfig,
         );
-        runOnJS(onSwipe)(event.translationX > 0 ? 'right' : 'left');
+        runOnJS(onSwipe)(event.translationX > 0 ? "right" : "left");
       } else {
         translateX.value = withSpring(0, springConfig);
       }
@@ -64,34 +67,33 @@ export function PaperCard({ paper, onSwipe, style }: PaperCardProps) {
 
   const handleTextLayout = (event: any) => {
     const maxHeight = SCREEN_HEIGHT * 0.35;
-    setIsTextTruncated(event.nativeEvent.lines.length > Math.floor(maxHeight / 20));
+    setIsTextTruncated(
+      event.nativeEvent.lines.length > Math.floor(maxHeight / 20),
+    );
   };
 
   return (
     <>
-      <PanGestureHandler 
-        onGestureEvent={panGesture}
-        activeOffsetX={[-10, 10]}
-      >
+      <PanGestureHandler onGestureEvent={panGesture} activeOffsetX={[-10, 10]}>
         <Animated.View
           style={[
             {
-              height: '100%',
-              width: '100%',
+              height: "100%",
+              width: "100%",
             },
             style,
-            animatedStyle
+            animatedStyle,
           ]}
           className="bg-white rounded-xl shadow-xl"
         >
           <View className="flex-1 p-6">
             <Text className="text-2xl font-bold text-gray-800">
-              {paper.title || 'Untitled Paper'}
+              {paper.title || "Untitled Paper"}
             </Text>
-            
+
             <View className="space-y-2 mt-4">
               <Text className="font-semibold text-gray-700">Abstract</Text>
-              <Text 
+              <Text
                 className="text-gray-600 leading-relaxed"
                 numberOfLines={Math.floor((SCREEN_HEIGHT * 0.4) / 20)}
                 onTextLayout={handleTextLayout}
@@ -99,7 +101,7 @@ export function PaperCard({ paper, onSwipe, style }: PaperCardProps) {
                 {paper.abstract}
               </Text>
               {isTextTruncated && (
-                <TouchableOpacity 
+                <TouchableOpacity
                   onPress={() => setModalVisible(true)}
                   className="mt-2"
                 >
@@ -114,7 +116,7 @@ export function PaperCard({ paper, onSwipe, style }: PaperCardProps) {
             </View>
           </View>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => setModalVisible(true)}
             activeOpacity={0.7}
             className="absolute bottom-8 right-5 bg-slate-600 rounded-full p-3"

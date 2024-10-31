@@ -1,6 +1,13 @@
-import React from 'react';
-import { Animated, TextInput, TouchableOpacity, View, Keyboard, Platform } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import React from "react";
+import {
+  Animated,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Keyboard,
+  Platform,
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
 
 interface SearchBarProps {
   onSubmit: (query: string) => void;
@@ -10,8 +17,14 @@ interface SearchBarProps {
   placeholder?: string;
 }
 
-export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear , placeholder}: SearchBarProps) => {
-  const [query, setQuery] = React.useState('');
+export const SearchBar = ({
+  onSubmit,
+  isExpanded,
+  onFocus,
+  onClear,
+  placeholder,
+}: SearchBarProps) => {
+  const [query, setQuery] = React.useState("");
   const animatedValue = React.useRef(new Animated.Value(0)).current;
   const inputRef = React.useRef<TextInput>(null);
 
@@ -36,7 +49,7 @@ export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear , placeholder
   };
 
   const handleClear = () => {
-    setQuery('');
+    setQuery("");
     onClear();
     inputRef.current?.focus();
   };
@@ -46,7 +59,7 @@ export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear , placeholder
       style={{
         transform: [{ translateY }],
         zIndex: 1,
-        position: 'relative',
+        position: "relative",
       }}
       className="w-full px-4 py-2"
     >
@@ -58,7 +71,7 @@ export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear , placeholder
           >
             <Feather name="search" size={20} color="#9ca3af" />
           </TouchableOpacity>
-          
+
           <TextInput
             ref={inputRef}
             className="flex-1 text-base"
@@ -76,9 +89,9 @@ export const SearchBar = ({ onSubmit, isExpanded, onFocus, onClear , placeholder
               android: { paddingVertical: 8 },
             })}
           />
-          
+
           {query.length > 0 && (
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={handleClear}
               className="px-2"
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}

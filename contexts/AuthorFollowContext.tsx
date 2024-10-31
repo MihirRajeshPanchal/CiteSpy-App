@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 interface AuthorFollowContextType {
   followedAuthors: Set<string>;
@@ -9,18 +9,26 @@ interface AuthorFollowContextType {
   refreshFollowStatus: () => Promise<void>;
 }
 
-const AuthorFollowContext = createContext<AuthorFollowContextType | undefined>(undefined);
+const AuthorFollowContext = createContext<AuthorFollowContextType | undefined>(
+  undefined,
+);
 
 export const useAuthorFollow = () => {
   const context = useContext(AuthorFollowContext);
   if (context === undefined) {
-    throw new Error('useAuthorFollow must be used within an AuthorFollowProvider');
+    throw new Error(
+      "useAuthorFollow must be used within an AuthorFollowProvider",
+    );
   }
   return context;
 };
 
-export const AuthorFollowProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [followedAuthors, setFollowedAuthors] = useState<Set<string>>(new Set());
+export const AuthorFollowProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [followedAuthors, setFollowedAuthors] = useState<Set<string>>(
+    new Set(),
+  );
   const auth = getAuth();
   const db = getFirestore();
 
@@ -34,7 +42,7 @@ export const AuthorFollowProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
       const followsRef = doc(db, `user_follows/${userId}/authors`);
       const followsDoc = await getDoc(followsRef);
-      
+
       if (followsDoc.exists()) {
         const followData = followsDoc.data();
         setFollowedAuthors(new Set(Object.keys(followData)));
@@ -42,7 +50,7 @@ export const AuthorFollowProvider: React.FC<{ children: React.ReactNode }> = ({ 
         setFollowedAuthors(new Set());
       }
     } catch (error) {
-      console.error('Error refreshing follow status:', error);
+      console.error("Error refreshing follow status:", error);
     }
   };
 
@@ -55,7 +63,7 @@ export const AuthorFollowProvider: React.FC<{ children: React.ReactNode }> = ({ 
   };
 
   const setFollowStatus = (authorId: string, isFollowing: boolean) => {
-    setFollowedAuthors(prev => {
+    setFollowedAuthors((prev) => {
       const newSet = new Set(prev);
       if (isFollowing) {
         newSet.add(authorId);
@@ -67,15 +75,15 @@ export const AuthorFollowProvider: React.FC<{ children: React.ReactNode }> = ({ 
   };
 
   return (
-    <AuthorFollowContext.Provider 
-      value={{ 
-        followedAuthors, 
-        checkIfFollowing, 
+    <AuthorFollowContext.Provider
+      value={{
+        followedAuthors,
+        checkIfFollowing,
         setFollowStatus,
-        refreshFollowStatus 
+        refreshFollowStatus,
       }}
     >
       {children}
     </AuthorFollowContext.Provider>
   );
-}; 
+};

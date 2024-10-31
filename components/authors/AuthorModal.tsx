@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, Modal, ScrollView, TouchableOpacity, Linking } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { Author } from '~/types/author';
-import { Paper } from '~/types/paper';
-import { PaperModal } from '../papers/PaperModal';
-import { FollowButton } from './FollowButton';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { Author } from "~/types/author";
+import { Paper } from "~/types/paper";
+import { PaperModal } from "../papers/PaperModal";
+import { FollowButton } from "./FollowButton";
 
 interface AuthorModalProps {
   author: Author;
@@ -33,7 +40,7 @@ export const AuthorModal = ({ author, visible, onClose }: AuthorModalProps) => {
           const idList = Array.isArray(ids) ? ids : [ids].filter(Boolean);
           return idList.length > 0 ? (
             <Text key={platform} className="text-gray-700">
-              {platform}: {idList.join(', ')}
+              {platform}: {idList.join(", ")}
             </Text>
           ) : null;
         })}
@@ -45,7 +52,9 @@ export const AuthorModal = ({ author, visible, onClose }: AuthorModalProps) => {
     return (
       <View className="flex-row flex-wrap justify-center items-center gap-6 mb-4 bg-gray-50 p-4 rounded-lg">
         <View className="items-center">
-          <Text className="text-sm font-medium text-gray-600">Total Papers</Text>
+          <Text className="text-sm font-medium text-gray-600">
+            Total Papers
+          </Text>
           <Text className="text-xl font-semibold">{author.paperCount}</Text>
         </View>
         <View className="items-center">
@@ -81,8 +90,8 @@ export const AuthorModal = ({ author, visible, onClose }: AuthorModalProps) => {
           <ScrollView className="flex-1 p-4">
             <View className="flex-row justify-between items-center mb-2">
               <Text className="text-2xl font-bold mb-4">{author.name}</Text>
-              <FollowButton 
-                authorId={author.authorId} 
+              <FollowButton
+                authorId={author.authorId}
                 authorName={author.name}
                 authorUrl={author.url}
                 className="mx-2"
@@ -90,7 +99,9 @@ export const AuthorModal = ({ author, visible, onClose }: AuthorModalProps) => {
             </View>
             {author.affiliations && author.affiliations.length > 0 && (
               <View className="mb-4">
-                <Text className="text-base font-semibold mb-2">Affiliations</Text>
+                <Text className="text-base font-semibold mb-2">
+                  Affiliations
+                </Text>
                 {author.affiliations.map((affiliation, index) => (
                   <Text key={index} className="text-gray-700">
                     {affiliation}
@@ -138,4 +149,4 @@ export const AuthorModal = ({ author, visible, onClose }: AuthorModalProps) => {
       )}
     </>
   );
-}; 
+};

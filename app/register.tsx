@@ -37,18 +37,18 @@ export default function RegisterScreen() {
       <TouchableOpacity
         onPress={handleRegister}
         style={{
-          backgroundColor: '#1F2937',
+          backgroundColor: "#1F2937",
           padding: 12,
           borderRadius: 8,
-          width: '80%',
+          width: "80%",
           marginBottom: 24,
-          alignItems: 'center',
+          alignItems: "center",
         }}
         accessibilityLabel="Register button"
       >
-        <Text style={{ color: '#FFFFFF', fontSize: 16 }}>Register</Text>
+        <Text style={{ color: "#FFFFFF", fontSize: 16 }}>Register</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push('/login')}>
+      <TouchableOpacity onPress={() => router.push("/login")}>
         <Text className="text-gray-600 mt-4">
           Already have an account? <Text className="text-blue-500">Log in</Text>
         </Text>
@@ -56,4 +56,3 @@ export default function RegisterScreen() {
     </View>
   );
 }
- 

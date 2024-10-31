@@ -1,18 +1,32 @@
-import { Feather } from '@expo/vector-icons';
-import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Text, View, Modal, ActivityIndicator } from 'react-native';
-import { useBookmarks } from '~/contexts/BookMarkContext';
-import type { Paper } from '~/types/paper';
+import { Feather } from "@expo/vector-icons";
+import React, { useState, useEffect } from "react";
+import {
+  TouchableOpacity,
+  Text,
+  View,
+  Modal,
+  ActivityIndicator,
+} from "react-native";
+import { useBookmarks } from "~/contexts/BookMarkContext";
+import type { Paper } from "~/types/paper";
 
 interface BookmarkButtonProps {
   paper: Paper;
   className?: string;
 }
 
-export const BookmarkButton = ({ paper, className = '' }: BookmarkButtonProps) => {
+export const BookmarkButton = ({
+  paper,
+  className = "",
+}: BookmarkButtonProps) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { collections, createCollection, addPaperToCollection, refreshCollections } = useBookmarks();
+  const {
+    collections,
+    createCollection,
+    addPaperToCollection,
+    refreshCollections,
+  } = useBookmarks();
 
   useEffect(() => {
     refreshCollections();
@@ -24,7 +38,7 @@ export const BookmarkButton = ({ paper, className = '' }: BookmarkButtonProps) =
       await addPaperToCollection(collectionId, paper);
       setModalVisible(false);
     } catch (error) {
-      console.error('Failed to add paper to collection:', error);
+      console.error("Failed to add paper to collection:", error);
     } finally {
       setIsLoading(false);
     }
@@ -33,13 +47,13 @@ export const BookmarkButton = ({ paper, className = '' }: BookmarkButtonProps) =
   const handleCreateDefaultCollection = async () => {
     try {
       setIsLoading(true);
-      await createCollection('My Papers');
+      await createCollection("My Papers");
       const defaultCollection = collections[0];
       if (defaultCollection) {
         await handleBookmark(defaultCollection.id);
       }
     } catch (error) {
-      console.error('Failed to create default collection:', error);
+      console.error("Failed to create default collection:", error);
     } finally {
       setIsLoading(false);
     }
@@ -62,8 +76,10 @@ export const BookmarkButton = ({ paper, className = '' }: BookmarkButtonProps) =
       >
         <View className="flex-1 justify-center items-center bg-black/50">
           <View className="bg-white rounded-lg p-6 w-[90%] max-w-md">
-            <Text className="text-xl font-semibold mb-4">Save to Collection</Text>
-            
+            <Text className="text-xl font-semibold mb-4">
+              Save to Collection
+            </Text>
+
             {isLoading ? (
               <View className="py-8">
                 <ActivityIndicator size="large" color="#4B5563" />
@@ -77,7 +93,9 @@ export const BookmarkButton = ({ paper, className = '' }: BookmarkButtonProps) =
                   onPress={handleCreateDefaultCollection}
                   className="bg-gray-900 rounded-lg py-3 px-4 mb-4"
                 >
-                  <Text className="text-white text-center font-medium">Create "My Papers" Collection</Text>
+                  <Text className="text-white text-center font-medium">
+                    Create "My Papers" Collection
+                  </Text>
                 </TouchableOpacity>
               </View>
             ) : (

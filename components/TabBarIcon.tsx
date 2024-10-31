@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { StyleSheet } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 export const TabBarIcon = ({
   Icon = FontAwesome,
@@ -12,7 +12,9 @@ export const TabBarIcon = ({
   color: string;
   size: number;
 }) => {
-  return <Icon name={name} size={size} color={color} style={styles.tabBarIcon} />;
+  return (
+    <Icon name={name} size={size} color={color} style={styles.tabBarIcon} />
+  );
 };
 
 export const styles = StyleSheet.create({

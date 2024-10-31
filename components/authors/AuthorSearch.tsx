@@ -1,8 +1,15 @@
-import React from 'react';
-import { View, FlatList, ActivityIndicator, Text, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { SearchBar } from '../utils/SearchBar';
-import { AuthorTile } from './AuthorTile';
-import { Author, AuthorSearchResponse } from '~/types/author';
+import React from "react";
+import {
+  View,
+  FlatList,
+  ActivityIndicator,
+  Text,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { SearchBar } from "../utils/SearchBar";
+import { AuthorTile } from "./AuthorTile";
+import { Author, AuthorSearchResponse } from "~/types/author";
 
 const S2_API_KEY = process.env.EXPO_PUBLIC_S2_API_KEY;
 const INITIAL_LIMIT = 10;
@@ -13,8 +20,8 @@ export const AuthorSearch = () => {
   const [authors, setAuthors] = React.useState<Author[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
-  const [error, setError] = React.useState('');
-  const [currentQuery, setCurrentQuery] = React.useState('');
+  const [error, setError] = React.useState("");
+  const [currentQuery, setCurrentQuery] = React.useState("");
   const [offset, setOffset] = React.useState(0);
   const [hasMore, setHasMore] = React.useState(true);
 
@@ -27,45 +34,50 @@ export const AuthorSearch = () => {
     } else {
       setIsLoadingMore(true);
     }
-    
-    setError('');
-    
+
+    setError("");
+
     try {
       const currentOffset = reset ? 0 : offset;
       const response = await fetch(
-        'https://api.semanticscholar.org/graph/v1/author/search?' +
-        new URLSearchParams({
-          query,
-          limit: (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT).toString(),
-          offset: currentOffset.toString(),
-          fields: 'authorId,externalIds,name,url,affiliations,paperCount,citationCount,hIndex,papers.paperId,papers.title,papers.url,papers.venue,papers.year,papers.authors,papers.abstract,papers.citationCount,papers.publicationTypes,papers.citationStyles,papers.externalIds'
-        }), {
-          headers: { 'X-API-KEY': S2_API_KEY || '' }
-        }
+        "https://api.semanticscholar.org/graph/v1/author/search?" +
+          new URLSearchParams({
+            query,
+            limit: (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT).toString(),
+            offset: currentOffset.toString(),
+            fields:
+              "authorId,externalIds,name,url,affiliations,paperCount,citationCount,hIndex,papers.paperId,papers.title,papers.url,papers.venue,papers.year,papers.authors,papers.abstract,papers.citationCount,papers.publicationTypes,papers.citationStyles,papers.externalIds",
+          }),
+        {
+          headers: { "X-API-KEY": S2_API_KEY || "" },
+        },
       );
 
       if (!response.ok) {
-        throw new Error('Failed to fetch authors');
+        throw new Error("Failed to fetch authors");
       }
 
       const searchResponse: AuthorSearchResponse = await response.json();
 
       const newAuthors = searchResponse.data.map((author, index) => ({
         ...author,
-        uniqueId: `${author.authorId}-${currentOffset + index}`
+        uniqueId: `${author.authorId}-${currentOffset + index}`,
       }));
-      
+
       if (reset) {
         setAuthors(newAuthors);
       } else {
-        setAuthors(prevAuthors => [...prevAuthors, ...newAuthors]);
+        setAuthors((prevAuthors) => [...prevAuthors, ...newAuthors]);
       }
-      
+
       setOffset(currentOffset + searchResponse.data.length);
-      setHasMore(searchResponse.data.length === (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT));
+      setHasMore(
+        searchResponse.data.length ===
+          (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT),
+      );
       setCurrentQuery(query);
     } catch (err) {
-      setError('Failed to load authors. Please try again.');
+      setError("Failed to load authors. Please try again.");
       console.error(err);
     } finally {
       if (reset) {
@@ -84,7 +96,7 @@ export const AuthorSearch = () => {
 
   const renderFooter = () => {
     if (!isLoadingMore) return null;
-    
+
     return (
       <View className="py-4">
         <ActivityIndicator size="small" />
@@ -118,11 +130,11 @@ export const AuthorSearch = () => {
             setAuthors([]);
             setOffset(0);
             setHasMore(true);
-            setCurrentQuery('');
+            setCurrentQuery("");
           }}
-          placeholder='Search Authors'
+          placeholder="Search Authors"
         />
-        
+
         {isLoading ? (
           <View className="flex-1 justify-center items-center">
             <ActivityIndicator size="large" />
@@ -148,4 +160,4 @@ export const AuthorSearch = () => {
       </View>
     </TouchableWithoutFeedback>
   );
-}; 
+};

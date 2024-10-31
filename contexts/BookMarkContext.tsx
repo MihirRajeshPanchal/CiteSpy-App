@@ -1,7 +1,15 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from 'firebase/firestore';
-import type { Paper } from '~/types/paper';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  collection,
+  getDocs,
+} from "firebase/firestore";
+import type { Paper } from "~/types/paper";
 
 interface BookmarkCollection {
   id: string;
@@ -18,21 +26,28 @@ interface BookmarkContextType {
   createCollection: (name: string) => Promise<void>;
   deleteCollection: (collectionId: string) => Promise<void>;
   addPaperToCollection: (collectionId: string, paper: Paper) => Promise<void>;
-  removePaperFromCollection: (collectionId: string, paperId: string) => Promise<void>;
+  removePaperFromCollection: (
+    collectionId: string,
+    paperId: string,
+  ) => Promise<void>;
   refreshCollections: () => Promise<void>;
 }
 
-const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);
+const BookmarkContext = createContext<BookmarkContextType | undefined>(
+  undefined,
+);
 
 export const useBookmarks = () => {
   const context = useContext(BookmarkContext);
   if (!context) {
-    throw new Error('useBookmarks must be used within a BookmarkProvider');
+    throw new Error("useBookmarks must be used within a BookmarkProvider");
   }
   return context;
 };
 
-export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [collections, setCollections] = useState<BookmarkCollection[]>([]);
   const [papers, setPapers] = useState<Record<string, Paper[]>>({});
   const [loading, setLoading] = useState(true);
@@ -44,11 +59,11 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const refreshCollections = async () => {
     if (!auth.currentUser || loading) return;
-    
+
     try {
       setLoading(true);
       setError(null);
-      
+
       const userId = auth.currentUser?.uid;
       if (!userId) {
         setCollections([]);
@@ -56,9 +71,12 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         return;
       }
 
-      const collectionsRef = collection(db, `user_collections/${userId}/collections`);
+      const collectionsRef = collection(
+        db,
+        `user_collections/${userId}/collections`,
+      );
       const collectionsSnapshot = await getDocs(collectionsRef);
-      
+
       const collectionsData: BookmarkCollection[] = [];
       const papersData: Record<string, Paper[]> = {};
 
@@ -66,17 +84,22 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const collectionData = collectionDoc.data() as BookmarkCollection;
         collectionsData.push({ ...collectionData, id: collectionDoc.id });
 
-        const papersRef = collection(db, `user_collections/${userId}/collections/${collectionDoc.id}/papers`);
+        const papersRef = collection(
+          db,
+          `user_collections/${userId}/collections/${collectionDoc.id}/papers`,
+        );
         const papersSnapshot = await getDocs(papersRef);
-        papersData[collectionDoc.id] = papersSnapshot.docs.map(doc => doc.data() as Paper);
+        papersData[collectionDoc.id] = papersSnapshot.docs.map(
+          (doc) => doc.data() as Paper,
+        );
       }
 
       setCollections(collectionsData);
       setPapers(papersData);
       setInitialized(true);
     } catch (err) {
-      console.error('Error fetching collections:', err);
-      setError('Failed to load bookmark collections');
+      console.error("Error fetching collections:", err);
+      setError("Failed to load bookmark collections");
     } finally {
       setLoading(false);
     }
@@ -85,79 +108,105 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const createCollection = async (name: string) => {
     try {
       const userId = auth.currentUser?.uid;
-      if (!userId) throw new Error('User not authenticated');
+      if (!userId) throw new Error("User not authenticated");
 
-      const collectionData: Omit<BookmarkCollection, 'id'> = {
+      const collectionData: Omit<BookmarkCollection, "id"> = {
         name,
         createdAt: new Date().toISOString(),
         paperCount: 0,
       };
 
-      const collectionRef = doc(collection(db, `user_collections/${userId}/collections`));
+      const collectionRef = doc(
+        collection(db, `user_collections/${userId}/collections`),
+      );
       await setDoc(collectionRef, collectionData);
       await refreshCollections();
       await refreshCollections();
     } catch (err) {
-      console.error('Error creating collection:', err);
-      throw new Error('Failed to create collection');
+      console.error("Error creating collection:", err);
+      throw new Error("Failed to create collection");
     }
   };
 
   const deleteCollection = async (collectionId: string) => {
     try {
       const userId = auth.currentUser?.uid;
-      if (!userId) throw new Error('User not authenticated');
+      if (!userId) throw new Error("User not authenticated");
 
-      const collectionRef = doc(db, `user_collections/${userId}/collections/${collectionId}`);
+      const collectionRef = doc(
+        db,
+        `user_collections/${userId}/collections/${collectionId}`,
+      );
       await deleteDoc(collectionRef);
       await refreshCollections();
     } catch (err) {
-      console.error('Error deleting collection:', err);
-      throw new Error('Failed to delete collection');
+      console.error("Error deleting collection:", err);
+      throw new Error("Failed to delete collection");
     }
   };
 
   const addPaperToCollection = async (collectionId: string, paper: Paper) => {
     try {
       const userId = auth.currentUser?.uid;
-      if (!userId) throw new Error('User not authenticated');
+      if (!userId) throw new Error("User not authenticated");
 
       if (!initialized) {
         await refreshCollections();
       }
 
-      const paperRef = doc(db, `user_collections/${userId}/collections/${collectionId}/papers/${paper.paperId}`);
+      const paperRef = doc(
+        db,
+        `user_collections/${userId}/collections/${collectionId}/papers/${paper.paperId}`,
+      );
       await setDoc(paperRef, paper);
 
-      const collectionRef = doc(db, `user_collections/${userId}/collections/${collectionId}`);
+      const collectionRef = doc(
+        db,
+        `user_collections/${userId}/collections/${collectionId}`,
+      );
       const collectionDoc = await getDoc(collectionRef);
       const collectionData = collectionDoc.data() as BookmarkCollection;
-      await setDoc(collectionRef, { ...collectionData, paperCount: (collectionData.paperCount || 0) + 1 });
+      await setDoc(collectionRef, {
+        ...collectionData,
+        paperCount: (collectionData.paperCount || 0) + 1,
+      });
 
       await refreshCollections();
     } catch (err) {
-      console.error('Error adding paper to collection:', err);
-      throw new Error('Failed to add paper to collection');
+      console.error("Error adding paper to collection:", err);
+      throw new Error("Failed to add paper to collection");
     }
   };
 
-  const removePaperFromCollection = async (collectionId: string, paperId: string) => {
+  const removePaperFromCollection = async (
+    collectionId: string,
+    paperId: string,
+  ) => {
     try {
       const userId = auth.currentUser?.uid;
-      if (!userId) throw new Error('User not authenticated');
+      if (!userId) throw new Error("User not authenticated");
 
-      const paperRef = doc(db, `user_collections/${userId}/collections/${collectionId}/papers/${paperId}`);
+      const paperRef = doc(
+        db,
+        `user_collections/${userId}/collections/${collectionId}/papers/${paperId}`,
+      );
       await deleteDoc(paperRef);
 
-      const collectionRef = doc(db, `user_collections/${userId}/collections/${collectionId}`);
+      const collectionRef = doc(
+        db,
+        `user_collections/${userId}/collections/${collectionId}`,
+      );
       const collectionDoc = await getDoc(collectionRef);
       const collectionData = collectionDoc.data() as BookmarkCollection;
-      await setDoc(collectionRef, { ...collectionData, paperCount: Math.max(0, (collectionData.paperCount || 1) - 1) });
+      await setDoc(collectionRef, {
+        ...collectionData,
+        paperCount: Math.max(0, (collectionData.paperCount || 1) - 1),
+      });
 
       await refreshCollections();
     } catch (err) {
-      console.error('Error removing paper from collection:', err);
-      throw new Error('Failed to remove paper from collection');
+      console.error("Error removing paper from collection:", err);
+      throw new Error("Failed to remove paper from collection");
     }
   };
 

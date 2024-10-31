@@ -1,10 +1,16 @@
-import React, { useRef, useState } from 'react';
-import { View, ScrollView, TouchableOpacity, Text, Dimensions } from 'react-native';
+import React, { useRef, useState } from "react";
+import {
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Text,
+  Dimensions,
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
 interface InterestSliderProps {
   interests: string[];
@@ -12,13 +18,17 @@ interface InterestSliderProps {
   onInterestChange: (interest: string) => void;
 }
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_WIDTH = Dimensions.get("window").width;
 const SPRING_CONFIG = {
   damping: 15,
   stiffness: 150,
 };
 
-export function InterestSlider({ interests, selectedInterest, onInterestChange }: InterestSliderProps) {
+export function InterestSlider({
+  interests,
+  selectedInterest,
+  onInterestChange,
+}: InterestSliderProps) {
   const scrollViewRef = useRef<ScrollView>(null);
   const [contentWidth, setContentWidth] = useState(0);
   const bounceValue = useSharedValue(0);
@@ -62,20 +72,20 @@ export function InterestSlider({ interests, selectedInterest, onInterestChange }
               onPress={() => onInterestChange(interest)}
               className={`
                 px-6 py-3 rounded-full mx-2
-                ${index === 0 ? 'ml-4' : ''}
-                ${index === interests.length - 1 ? 'mr-4' : ''}
-                ${selectedInterest === interest
-                  ? 'bg-slate-500'
-                  : 'bg-gray-100'
+                ${index === 0 ? "ml-4" : ""}
+                ${index === interests.length - 1 ? "mr-4" : ""}
+                ${
+                  selectedInterest === interest ? "bg-slate-500" : "bg-gray-100"
                 }
               `}
             >
-              <Text 
+              <Text
                 className={`
                   text-base font-medium
-                  ${selectedInterest === interest
-                    ? 'text-white'
-                    : 'text-gray-700'
+                  ${
+                    selectedInterest === interest
+                      ? "text-white"
+                      : "text-gray-700"
                   }
                 `}
               >

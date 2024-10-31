@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  ScrollView, 
-  Animated, 
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Animated,
   Dimensions,
   SafeAreaView,
   StatusBar,
-  Platform
-} from 'react-native';
-import { router } from 'expo-router';
-import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+  Platform,
+} from "react-native";
+import { router } from "expo-router";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 interface InterestBubbleProps {
   label: string;
@@ -21,9 +21,14 @@ interface InterestBubbleProps {
   index: number;
 }
 
-const InterestBubble: React.FC<InterestBubbleProps> = ({ label, isSelected, onToggle, index }) => {
+const InterestBubble: React.FC<InterestBubbleProps> = ({
+  label,
+  isSelected,
+  onToggle,
+  index,
+}) => {
   const animatedValue = new Animated.Value(0);
-  
+
   useEffect(() => {
     Animated.spring(animatedValue, {
       toValue: 1,
@@ -52,10 +57,12 @@ const InterestBubble: React.FC<InterestBubbleProps> = ({ label, isSelected, onTo
       <TouchableOpacity
         onPress={onToggle}
         className={`m-2 px-6 py-3 rounded-full border ${
-          isSelected ? 'bg-gray-600 border-gray-700' : 'bg-gray-100 border-gray-200'
+          isSelected
+            ? "bg-gray-600 border-gray-700"
+            : "bg-gray-100 border-gray-200"
         }`}
         style={{
-          shadowColor: isSelected ? '#3B82F6' : '#000',
+          shadowColor: isSelected ? "#3B82F6" : "#000",
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: isSelected ? 0.3 : 0.1,
           shadowRadius: 4,
@@ -63,9 +70,7 @@ const InterestBubble: React.FC<InterestBubbleProps> = ({ label, isSelected, onTo
         }}
       >
         <Text
-          className={`text-base ${
-            isSelected ? 'text-white' : 'text-gray-700'
-          }`}
+          className={`text-base ${isSelected ? "text-white" : "text-gray-700"}`}
         >
           {label}
         </Text>
@@ -75,21 +80,21 @@ const InterestBubble: React.FC<InterestBubbleProps> = ({ label, isSelected, onTo
 };
 
 const researchTopics = [
-  'Artificial Intelligence',
-  'Machine Learning',
-  'Computer Vision',
-  'Natural Language Processing',
-  'Robotics',
-  'Quantum Computing',
-  'Cybersecurity',
-  'Data Science',
-  'Cloud Computing',
-  'Internet of Things',
-  'Blockchain',
-  'Bioinformatics',
-  'Human-Computer Interaction',
-  'Software Engineering',
-  'Computer Graphics',
+  "Artificial Intelligence",
+  "Machine Learning",
+  "Computer Vision",
+  "Natural Language Processing",
+  "Robotics",
+  "Quantum Computing",
+  "Cybersecurity",
+  "Data Science",
+  "Cloud Computing",
+  "Internet of Things",
+  "Blockchain",
+  "Bioinformatics",
+  "Human-Computer Interaction",
+  "Software Engineering",
+  "Computer Graphics",
 ];
 
 export default function OnboardingScreen() {
@@ -107,16 +112,16 @@ export default function OnboardingScreen() {
   }, []);
 
   const toggleInterest = (interest: string) => {
-    setSelectedInterests(prev =>
+    setSelectedInterests((prev) =>
       prev.includes(interest)
-        ? prev.filter(item => item !== interest)
-        : [...prev, interest]
+        ? prev.filter((item) => item !== interest)
+        : [...prev, interest],
     );
   };
 
   const handleComplete = async () => {
     if (selectedInterests.length === 0) {
-      alert('Please select at least one research interest');
+      alert("Please select at least one research interest");
       return;
     }
 
@@ -125,28 +130,30 @@ export default function OnboardingScreen() {
       const userEmail = auth.currentUser?.email;
 
       if (!userId || !userEmail) {
-        throw new Error('User not authenticated');
+        throw new Error("User not authenticated");
       }
 
-      await setDoc(doc(db, 'user_interests', userId), {
+      await setDoc(doc(db, "user_interests", userId), {
         email: userEmail,
         interests: selectedInterests,
         updatedAt: new Date().toISOString(),
       });
 
-      router.replace('/(tabs)');
+      router.replace("/(tabs)");
     } catch (error) {
-      alert('Error saving interests: ' + (error as Error).message);
+      alert("Error saving interests: " + (error as Error).message);
     }
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
+    <SafeAreaView
+      className="flex-1 bg-white"
+      style={{
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      }}
+    >
       <StatusBar barStyle="dark-content" />
-      <Animated.View 
-        className="flex-1 px-4 py-6"
-        style={{ opacity: fadeAnim }}
-      >
+      <Animated.View className="flex-1 px-4 py-6" style={{ opacity: fadeAnim }}>
         <View className="mb-8">
           <Text className="text-3xl font-bold text-center mb-3 text-gray-900">
             Research Interests
@@ -159,13 +166,13 @@ export default function OnboardingScreen() {
           </Text>
         </View>
 
-        <ScrollView 
+        <ScrollView
           className="flex-1 mb-6"
           contentContainerStyle={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            paddingBottom: 20
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            paddingBottom: 20,
           }}
           showsVerticalScrollIndicator={false}
         >
@@ -184,10 +191,10 @@ export default function OnboardingScreen() {
           <TouchableOpacity
             onPress={handleComplete}
             className={`rounded-xl py-4 px-6 ${
-              selectedInterests.length > 0 ? 'bg-gray-900' : 'bg-gray-300'
+              selectedInterests.length > 0 ? "bg-gray-900" : "bg-gray-300"
             }`}
             style={{
-              shadowColor: '#000',
+              shadowColor: "#000",
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.2,
               shadowRadius: 4,
@@ -202,4 +209,4 @@ export default function OnboardingScreen() {
       </Animated.View>
     </SafeAreaView>
   );
-} 
+}

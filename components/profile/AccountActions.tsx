@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import React from "react";
+import { View, TouchableOpacity, Text } from "react-native";
 
 interface AccountActionsProps {
   onChangePassword: () => void;
@@ -8,7 +8,7 @@ interface AccountActionsProps {
 
 export const AccountActions: React.FC<AccountActionsProps> = ({
   onChangePassword,
-  onSignOut
+  onSignOut,
 }) => (
   <View>
     <Text className="text-lg font-medium mb-4">Account Settings</Text>

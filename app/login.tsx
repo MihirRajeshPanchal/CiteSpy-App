@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Button, TextInput, View, Text, TouchableOpacity } from 'react-native';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { router } from 'expo-router';
+import React, { useState } from "react";
+import { Button, TextInput, View, Text, TouchableOpacity } from "react-native";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { router } from "expo-router";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const handleLogin = () => {
     signInWithEmailAndPassword(getAuth(), email, password)
       .then((user) => {
-        if (user) router.replace('/(tabs)');
+        if (user) router.replace("/(tabs)");
       })
       .catch((err) => {
         alert(err?.message);
@@ -37,18 +37,18 @@ export default function LoginScreen() {
       <TouchableOpacity
         onPress={handleLogin}
         style={{
-          backgroundColor: '#1F2937',
+          backgroundColor: "#1F2937",
           padding: 12,
           borderRadius: 8,
-          width: '80%',
+          width: "80%",
           marginBottom: 24,
-          alignItems: 'center',
+          alignItems: "center",
         }}
         accessibilityLabel="Login button"
       >
-        <Text style={{ color: '#E5E7EB', fontSize: 16 }}>Login</Text>
+        <Text style={{ color: "#E5E7EB", fontSize: 16 }}>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.replace('/register')}>
+      <TouchableOpacity onPress={() => router.replace("/register")}>
         <Text className="text-gray-600 mt-4">
           Don't have an account? <Text className="text-blue-500">Sign up</Text>
         </Text>
@@ -56,4 +56,3 @@ export default function LoginScreen() {
     </View>
   );
 }
- 
