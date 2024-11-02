@@ -5,6 +5,7 @@ import {
   Modal,
   ScrollView,
   TouchableOpacity,
+  ToastAndroid,
   Linking,
   Platform,
 } from "react-native";
@@ -38,8 +39,10 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
   };
 
   const copyToClipboard = async (text: string, label: string) => {
+    const title = label.charAt(0).toUpperCase() + label.slice(1);
     await Clipboard.setStringAsync(text);
-    console.log(`${label} copied to clipboard`);
+    ToastAndroid.show(`${title} copied to clipboard`, ToastAndroid.SHORT);
+    console.log(`${title} copied to clipboard`);
   };
 
   const renderCitationStyles = () => {
@@ -49,7 +52,7 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
       <TouchableOpacity
         key={format}
         className="mt-2 p-3 bg-gray-100 rounded-lg"
-        onPress={() => copyToClipboard(citation, `${format} citation`)}
+        onPress={() => copyToClipboard(citation, `${format} Citation`)}
       >
         <Text className="text-sm font-semibold text-gray-600">{format}</Text>
         <Text className="text-sm leading-5 ">{citation}</Text>
@@ -115,7 +118,7 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
                 onPress={() =>
                   copyToClipboard(
                     `${paper.venue || ""} ${paper.year || ""}`.trim(),
-                    "Publication info",
+                    "Publication Information",
                   )
                 }
                 className="mb-5"
