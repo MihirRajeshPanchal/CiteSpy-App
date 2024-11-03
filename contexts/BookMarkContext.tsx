@@ -26,7 +26,7 @@ interface BookmarkContextType {
   error: string | null;
   createCollection: (name: string) => Promise<void>;
   deleteCollection: (collectionId: string) => Promise<void>;
-  editCollection: (collectionId: string, newName: string) => Promise<void>; 
+  editCollection: (collectionId: string, newName: string) => Promise<void>;
   addPaperToCollection: (collectionId: string, paper: Paper) => Promise<void>;
   removePaperFromCollection: (
     collectionId: string,
@@ -111,28 +111,29 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const userId = auth.currentUser?.uid;
       if (!userId) throw new Error("User not authenticated");
-  
+
       const trimmedName = name.trim();
       if (!trimmedName) {
         throw new Error("Collection name cannot be empty");
       }
-  
+
       const existingCollection = collections.find(
-        (collection) => collection.name.toLowerCase() === trimmedName.toLowerCase()
+        (collection) =>
+          collection.name.toLowerCase() === trimmedName.toLowerCase(),
       );
-  
+
       if (existingCollection) {
         throw new Error("A collection with this name already exists");
       }
-  
+
       const collectionData: Omit<BookmarkCollection, "id"> = {
         name: trimmedName,
         createdAt: new Date().toISOString(),
         paperCount: 0,
       };
-  
+
       const collectionRef = doc(
-        collection(db, `user_collections/${userId}/collections`)
+        collection(db, `user_collections/${userId}/collections`),
       );
       await setDoc(collectionRef, collectionData);
       await refreshCollections();
@@ -169,9 +170,9 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({
       }
 
       const existingCollection = collections.find(
-        (collection) => 
-          collection.id !== collectionId && 
-          collection.name.toLowerCase() === trimmedName.toLowerCase()
+        (collection) =>
+          collection.id !== collectionId &&
+          collection.name.toLowerCase() === trimmedName.toLowerCase(),
       );
 
       if (existingCollection) {
@@ -180,7 +181,7 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({
 
       const collectionRef = doc(
         db,
-        `user_collections/${userId}/collections/${collectionId}`
+        `user_collections/${userId}/collections/${collectionId}`,
       );
 
       await updateDoc(collectionRef, { name: trimmedName });

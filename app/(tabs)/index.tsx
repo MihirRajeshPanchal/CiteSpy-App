@@ -28,8 +28,10 @@ export default function Home() {
     hasMore,
     currentInterest,
   } = usePapers(
-    interests.includes(selectedInterest) ? selectedInterest : (interests[0] || ''),
-    interests
+    interests.includes(selectedInterest)
+      ? selectedInterest
+      : interests[0] || "",
+    interests,
   );
 
   const db = getFirestore();
@@ -43,19 +45,18 @@ export default function Home() {
         router.replace("/landing");
         return;
       }
-  
+
       const userInterestsRef = doc(db, "user_interests", userId);
       const userInterestsDoc = await getDoc(userInterestsRef);
-  
+
       if (userInterestsDoc.exists()) {
         const userInterests = userInterestsDoc.data().interests || [];
         setInterests(userInterests);
-        
-        const newSelectedInterest = 
-          userInterests.includes(selectedInterest) 
-            ? selectedInterest 
-            : (userInterests[0] || '');
-        
+
+        const newSelectedInterest = userInterests.includes(selectedInterest)
+          ? selectedInterest
+          : userInterests[0] || "";
+
         setSelectedInterest(newSelectedInterest);
       } else {
         await setDoc(userInterestsRef, {
@@ -74,9 +75,9 @@ export default function Home() {
   useFocusEffect(
     React.useCallback(() => {
       loadUserData();
-    }, [])
+    }, []),
   );
-  
+
   React.useEffect(() => {
     if (selectedInterest) {
       setChangingInterest(true);
@@ -155,7 +156,10 @@ export default function Home() {
         <View className="items-center">
           <Text className="text-gray-600">No more papers to show</Text>
           {hasMore && (
-            <Text className="text-blue-500 mt-4" onPress={() => loadMore(false)}>
+            <Text
+              className="text-blue-500 mt-4"
+              onPress={() => loadMore(false)}
+            >
               Load more papers
             </Text>
           )}
@@ -208,4 +212,4 @@ export default function Home() {
       </SafeAreaView>
     </GestureHandlerRootView>
   );
-} 
+}

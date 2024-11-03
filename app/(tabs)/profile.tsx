@@ -42,7 +42,7 @@ export default function Profile() {
   useFocusEffect(
     useCallback(() => {
       loadUserData();
-    }, [])
+    }, []),
   );
 
   const loadUserData = async () => {

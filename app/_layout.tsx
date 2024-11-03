@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import * as SplashScreen from 'expo-splash-screen';
+import React, { useEffect, useState } from "react";
+import * as SplashScreen from "expo-splash-screen";
 import "../global.css";
 import { Stack } from "expo-router";
 import { firebaseConfig } from "../utils/firebase";
@@ -31,7 +31,7 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepare() {
       try {
-        await new Promise(resolve => setTimeout(resolve, 1000)); 
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         setAppIsReady(true);
         await SplashScreen.hideAsync();
@@ -49,16 +49,16 @@ export default function RootLayout() {
 
   return (
     // <AuthorFollowProvider>
-      <BookmarkProvider>
-        <Stack screenOptions={{ headerShown: true }}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-          <Stack.Screen name="landing" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-          <Stack.Screen name="register" options={{ headerShown: false }} />
-        </Stack>
-      </BookmarkProvider>
+    <BookmarkProvider>
+      <Stack screenOptions={{ headerShown: true }}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        <Stack.Screen name="landing" options={{ headerShown: false }} />
+        <Stack.Screen name="login" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+        <Stack.Screen name="register" options={{ headerShown: false }} />
+      </Stack>
+    </BookmarkProvider>
     // </AuthorFollowProvider>
   );
 }

@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Dimensions, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -29,10 +35,15 @@ const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
 const CARD_HEIGHT = SCREEN_HEIGHT * 0.7;
 const CARD_PADDING = SCREEN_WIDTH * 0.05;
 const TITLE_MAX_HEIGHT = SCREEN_HEIGHT * 0.15;
-const BUTTON_HEIGHT = 50; 
-const ABSTRACT_MAX_HEIGHT = SCREEN_HEIGHT * 0.45 - BUTTON_HEIGHT; 
+const BUTTON_HEIGHT = 50;
+const ABSTRACT_MAX_HEIGHT = SCREEN_HEIGHT * 0.45 - BUTTON_HEIGHT;
 
-export function PaperCard({ paper, onSwipe, style, isLoadingMore }: PaperCardProps) {
+export function PaperCard({
+  paper,
+  onSwipe,
+  style,
+  isLoadingMore,
+}: PaperCardProps) {
   if (!paper.abstract || paper.abstract.trim() === "") {
     return null;
   }
@@ -95,7 +106,7 @@ export function PaperCard({ paper, onSwipe, style, isLoadingMore }: PaperCardPro
         >
           <View className="flex-1">
             <View style={{ maxHeight: TITLE_MAX_HEIGHT }} className="mb-4">
-              <Text 
+              <Text
                 className="text-2xl font-bold text-gray-800"
                 adjustsFontSizeToFit
                 minimumFontScale={0.5}
@@ -131,7 +142,7 @@ export function PaperCard({ paper, onSwipe, style, isLoadingMore }: PaperCardPro
             </View>
           </View>
 
-          <View 
+          <View
             style={{ height: BUTTON_HEIGHT, bottom: CARD_PADDING }}
             className="absolute left-5 right-5 flex-row justify-between items-center"
           >

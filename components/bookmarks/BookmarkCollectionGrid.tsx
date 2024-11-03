@@ -28,7 +28,9 @@ export const BookmarkCollectionGrid = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [newCollectionName, setNewCollectionName] = useState("");
-  const [editingCollectionId, setEditingCollectionId] = useState<string | null>(null);
+  const [editingCollectionId, setEditingCollectionId] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     refreshCollections();
@@ -40,9 +42,8 @@ export const BookmarkCollectionGrid = () => {
       setNewCollectionName("");
       setShowCreateModal(false);
     } catch (error) {
-      const errorMessage = error instanceof Error
-        ? error.message
-        : "Failed to create collection";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to create collection";
       Alert.alert("Error", errorMessage);
     }
   };
@@ -56,9 +57,8 @@ export const BookmarkCollectionGrid = () => {
         setEditingCollectionId(null);
       }
     } catch (error) {
-      const errorMessage = error instanceof Error
-        ? error.message
-        : "Failed to edit collection";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to edit collection";
       Alert.alert("Error", errorMessage);
     }
   };
@@ -121,7 +121,9 @@ export const BookmarkCollectionGrid = () => {
                 <Feather name="folder" size={24} color="#4B5563" />
                 <View className="flex-row items-center">
                   <TouchableOpacity
-                    onPress={() => openEditModal(collection.id, collection.name)}
+                    onPress={() =>
+                      openEditModal(collection.id, collection.name)
+                    }
                     className="p-2 mr-2"
                   >
                     <Feather name="edit" size={16} color="#4B5563" />
@@ -149,29 +151,29 @@ export const BookmarkCollectionGrid = () => {
         onRequestClose={() => setSelectedCollection(null)}
       >
         <View className="flex-1 bg-gray-50">
-  <View className="bg-white px-4 py-3 flex-row items-center border-b border-gray-200">
-    <TouchableOpacity
-      onPress={() => setSelectedCollection(null)}
-      className="p-2"
-    >
-      <Feather name="arrow-left" size={20} color="#4B5563" />
-    </TouchableOpacity>
-    <Text 
-      className="text-xl font-semibold ml-4 max-w-[200px] truncate flex-1" 
-      numberOfLines={1}
-    >
-      {collections.find((c) => c.id === selectedCollection)?.name}
-    </Text>
-    <View className="flex-row items-center">
-      <TouchableOpacity
-        onPress={() => copyAllCitations(selectedCollection!)}
-        className="bg-gray-100 rounded-lg py-2 px-4 flex-row items-center space-x-2"
-      >
-        <Text className="text-gray-700">Copy All Citations</Text>
-        <Feather name="copy" size={20} color="#4B5563" />
-      </TouchableOpacity>
-    </View>
-  </View>
+          <View className="bg-white px-4 py-3 flex-row items-center border-b border-gray-200">
+            <TouchableOpacity
+              onPress={() => setSelectedCollection(null)}
+              className="p-2"
+            >
+              <Feather name="arrow-left" size={20} color="#4B5563" />
+            </TouchableOpacity>
+            <Text
+              className="text-xl font-semibold ml-4 max-w-[200px] truncate flex-1"
+              numberOfLines={1}
+            >
+              {collections.find((c) => c.id === selectedCollection)?.name}
+            </Text>
+            <View className="flex-row items-center">
+              <TouchableOpacity
+                onPress={() => copyAllCitations(selectedCollection!)}
+                className="bg-gray-100 rounded-lg py-2 px-4 flex-row items-center space-x-2"
+              >
+                <Text className="text-gray-700">Copy All Citations</Text>
+                <Feather name="copy" size={20} color="#4B5563" />
+              </TouchableOpacity>
+            </View>
+          </View>
 
           <ScrollView className="flex-1 p-4">
             {(papers[selectedCollection!] || []).map((paper) => (
@@ -227,9 +229,7 @@ export const BookmarkCollectionGrid = () => {
       >
         <View className="flex-1 justify-center items-center bg-black/50">
           <View className="bg-white rounded-lg p-6 w-[90%] max-w-md">
-            <Text className="text-xl font-semibold mb-4">
-              Edit Collection
-            </Text>
+            <Text className="text-xl font-semibold mb-4">Edit Collection</Text>
             <TextInput
               value={newCollectionName}
               onChangeText={setNewCollectionName}

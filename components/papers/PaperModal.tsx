@@ -119,7 +119,7 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
                 onPress={() =>
                   copyToClipboard(
                     `${paper.venue || ""} ${paper.year || ""}`.trim(),
-                    "Publication Information"
+                    "Publication Information",
                   )
                 }
                 className="mb-5"

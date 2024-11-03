@@ -68,7 +68,7 @@ export function usePapers(selectedInterest: string, interests: string[]) {
         }
 
         const validPapers = data.data.filter(
-          (paper: Paper) => paper.abstract && paper.abstract.trim() !== ""
+          (paper: Paper) => paper.abstract && paper.abstract.trim() !== "",
         );
 
         const newPapers = validPapers.map((paper: Paper, index: number) => ({
@@ -79,11 +79,13 @@ export function usePapers(selectedInterest: string, interests: string[]) {
         if (reset) {
           setPapers(newPapers);
         } else {
-          setPapers(prev => [...prev, ...newPapers]);
+          setPapers((prev) => [...prev, ...newPapers]);
         }
 
         setOffset(currentOffset + data.data.length);
-        setHasMore(data.data.length === (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT));
+        setHasMore(
+          data.data.length === (reset ? INITIAL_LIMIT : LOAD_MORE_LIMIT),
+        );
         setCurrentInterest(queryInterest);
       } catch (error) {
         console.error("Error loading papers:", error);
@@ -104,7 +106,12 @@ export function usePapers(selectedInterest: string, interests: string[]) {
   );
 
   const loadMoreIfNeeded = useCallback(async () => {
-    if (papers.length <= MIN_PAPERS_THRESHOLD && hasMore && !isLoading && !isLoadingMore) {
+    if (
+      papers.length <= MIN_PAPERS_THRESHOLD &&
+      hasMore &&
+      !isLoading &&
+      !isLoadingMore
+    ) {
       await loadPapers(false);
     }
   }, [papers.length, hasMore, isLoading, isLoadingMore, loadPapers]);
