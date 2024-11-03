@@ -208,4 +208,4 @@ export default function Home() {
       </SafeAreaView>
     </GestureHandlerRootView>
   );
-}
+} 
