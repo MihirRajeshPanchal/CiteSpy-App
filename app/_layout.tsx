@@ -10,7 +10,7 @@ import {
   getReactNativePersistence,
 } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthorFollowProvider } from "../contexts/AuthorFollowContext";
+// import { AuthorFollowProvider } from "../contexts/AuthorFollowContext";
 import { BookmarkProvider } from "~/contexts/BookMarkContext";
 
 const app = initializeApp(firebaseConfig);

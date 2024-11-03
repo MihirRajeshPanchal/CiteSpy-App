@@ -55,7 +55,7 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
         onPress={() => copyToClipboard(citation, `${format} Citation`)}
       >
         <Text className="text-sm font-semibold text-gray-600">{format}</Text>
-        <Text className="text-sm leading-5 ">{citation}</Text>
+        <Text className="text-sm leading-5">{citation}</Text>
       </TouchableOpacity>
     ));
   };
@@ -68,9 +68,9 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
       onRequestClose={onClose}
     >
       <View className="flex-1 bg-black/50 justify-end">
-        <View className="bg-white rounded-t-2xl px-5 max-h-[92%] min-h-[92%]">
-          <ScrollView>
-            <View className="flex-row justify-between items-center py-4">
+        <View className="bg-white rounded-t-2xl max-h-[92%] min-h-[92%]">
+          <View className="absolute top-0 left-0 right-0 z-10 bg-white rounded-t-2xl border-b border-gray-200">
+            <View className="flex-row justify-between items-center py-4 px-5">
               <TouchableOpacity onPress={onClose} className="p-2">
                 <Feather name="x" size={24} color="#000" />
               </TouchableOpacity>
@@ -93,7 +93,8 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
                 )}
               </View>
             </View>
-
+          </View>
+          <ScrollView className="px-5 pt-3" style={{ marginTop: 65 }}>
             <TouchableOpacity
               onPress={() => copyToClipboard(paper.title, "Title")}
               className="mb-3"
@@ -118,7 +119,7 @@ export const PaperModal = ({ paper, visible, onClose }: PaperModalProps) => {
                 onPress={() =>
                   copyToClipboard(
                     `${paper.venue || ""} ${paper.year || ""}`.trim(),
-                    "Publication Information",
+                    "Publication Information"
                   )
                 }
                 className="mb-5"
