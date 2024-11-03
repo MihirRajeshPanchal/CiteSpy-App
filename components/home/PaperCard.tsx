@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, Dimensions, ActivityIndicator } from "react-native";
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -19,13 +19,14 @@ interface PaperCardProps {
   paper: Paper;
   onSwipe: (direction: "left" | "right") => void;
   style?: any;
+  isLoadingMore?: boolean;
 }
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
 
-export function PaperCard({ paper, onSwipe, style }: PaperCardProps) {
+export function PaperCard({ paper, onSwipe, style, isLoadingMore }: PaperCardProps) {
   if (!paper.abstract || paper.abstract.trim() === "") {
     return null;
   }
@@ -123,6 +124,12 @@ export function PaperCard({ paper, onSwipe, style }: PaperCardProps) {
           >
             <Feather name="maximize-2" size={20} color="white" />
           </TouchableOpacity>
+
+          {isLoadingMore && (
+            <View className="absolute bottom-8 left-5">
+              <ActivityIndicator size="small" color="#4B5563" />
+            </View>
+          )}
         </Animated.View>
       </PanGestureHandler>
 

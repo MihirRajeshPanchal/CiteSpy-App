@@ -16,7 +16,18 @@ export default function Home() {
   const [loadError, setLoadError] = React.useState<string>("");
   const [changingInterest, setChangingInterest] = React.useState(false);
 
-  const { papers, setPapers, isLoading, error, loadMore, hasMore } = usePapers(
+  const {
+    papers,
+    setPapers,
+    isLoading,
+    isLoadingMore,
+    isLoadingInitial,
+    error,
+    loadMore,
+    loadMoreIfNeeded,
+    hasMore,
+    currentInterest,
+  } = usePapers(
     interests.includes(selectedInterest) ? selectedInterest : (interests[0] || ''),
     interests
   );
@@ -77,24 +88,23 @@ export default function Home() {
   }, [selectedInterest]);
 
   const handleSwipe = async (paperId: string, direction: "left" | "right") => {
-    setPapers((prev) => prev?.filter((p) => p.paperId !== paperId) || []);
+    setPapers((prev) => {
+      const newPapers = prev?.filter((p) => p.paperId !== paperId) || [];
+      return newPapers;
+    });
 
-    if (papers.length <= 3 && hasMore && !isLoading) {
-      try {
-        console.log("Loading more papers...");
-        await loadMore();
-      } catch (error) {
-        console.error("Error loading more papers:", error);
-      }
-    }
+    setTimeout(() => {
+      loadMoreIfNeeded();
+    }, 0);
   };
 
   const handleInterestChange = (newInterest: string) => {
     setSelectedInterest(newInterest);
     setPapers([]);
   };
+
   const renderContent = () => {
-    if (loadingInterests) {
+    if (loadingInterests || isLoadingInitial) {
       return <Text className="text-gray-600">Loading interests...</Text>;
     }
 
@@ -121,7 +131,7 @@ export default function Home() {
     if (changingInterest || (isLoading && !papers.length)) {
       return (
         <Text className="text-gray-600">
-          Loading papers for {selectedInterest}...
+          Loading papers for {currentInterest}...
         </Text>
       );
     }
@@ -145,7 +155,7 @@ export default function Home() {
         <View className="items-center">
           <Text className="text-gray-600">No more papers to show</Text>
           {hasMore && (
-            <Text className="text-blue-500 mt-4" onPress={() => loadMore()}>
+            <Text className="text-blue-500 mt-4" onPress={() => loadMore(false)}>
               Load more papers
             </Text>
           )}
@@ -157,7 +167,7 @@ export default function Home() {
       <View className="relative w-full min-h-[550px]">
         {papers.slice(0, 3).map((paper, index) => (
           <PaperCard
-            key={paper.paperId}
+            key={paper.uniqueId || paper.paperId}
             paper={paper}
             onSwipe={(direction) => handleSwipe(paper.paperId, direction)}
             style={{
@@ -170,13 +180,9 @@ export default function Home() {
                 { translateY: index * 20 },
               ],
             }}
+            isLoadingMore={isLoadingMore && index === 0}
           />
         ))}
-        {isLoading && papers.length > 0 && (
-          <Text className="absolute bottom-4 left-4 text-gray-600">
-            Loading more papers...
-          </Text>
-        )}
       </View>
     );
   };
